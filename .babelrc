@@ -1,23 +1,29 @@
 {
-  "presets": ["react"],
-  "plugins": [
-    "transform-object-rest-spread",
-    "transform-es2015-classes"
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": "> 2% in CN and not ie <= 8 and not dead"
+        /*  "useBuiltIns": "usage",
+        "corejs": 3,
+        "modules": false */
+      }
+    ],
+    "@babel/preset-react"
   ],
-  "env": {
-  	"production": {
-  		"plugins": [
-  			"babel-plugin-transform-remove-debugger"
-  		]
-  	},
-    "development": {
-      "presets": ["react-hmre"]
-    },
-    "test": {
-      "plugins": [
-				"babel-plugin-add-module-exports",
-				"babel-plugin-transform-es2015-modules-commonjs"
-      ]
-    }
-  }
+  "plugins": [
+    /* [
+      "@babel/plugin-transform-runtime",
+      {
+        "corejs": true,
+        "helpers": true,
+        "regenerator": true,
+        "useESModules": false
+      }
+    ], */
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-proposal-class-properties",
+    ["@babel/plugin-proposal-decorators", { "legacy": true }]
+  ],
+  "comments": false
 }

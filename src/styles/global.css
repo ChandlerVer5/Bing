@@ -1,0 +1,57 @@
+@import './system-font.css';
+/* @import '~normalize.css/normalize.css'; */
+/* @import '~react-select/dist/react-select.css'; */
+
+:root {
+  /* refs constants/ui.js */
+  --main-input-height: 54px;
+  --main-result-height: 48px;
+  /* scrollbar */
+  ::-webkit-scrollbar-track-piece {
+    background-color: #fff;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #e2e2e2;
+    -webkit-border-radius: 4px;
+    border: 2px solid #fff;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #9f9f9f;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--main-background-color);
+  color: var(--main-font-color);
+  overflow: hidden;
+}
+
+body {
+  position: relative;
+  height: 100vh;
+  font-family: var(--main-font);
+}
+
+#root {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  /* 窗口边框设置 */
+  height: 100vh;
+  border: 2px solid #cecece;
+  overflow: hidden;
+}

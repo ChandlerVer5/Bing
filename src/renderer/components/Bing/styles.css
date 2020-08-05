@@ -1,0 +1,13 @@
+.search {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  top: -2px;
+}
+
+.inputWrapper {
+  height: var(--main-input-height);
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+}

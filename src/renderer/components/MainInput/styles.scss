@@ -1,0 +1,37 @@
+.mainInput {
+  // width: 100vw;
+  height: var(--main-input-height);
+  line-height: var(--main-input-height);
+  color: var(--main-font-color);
+  font-family: var(--main-font);
+  font-size: 1.5em;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+  background: transparent;
+  white-space: nowrap;
+  /* cursor: default; */
+  -webkit-app-region: no-drag;
+  user-select: none;
+  position: relative;
+  z-index: 1;
+  &::-webkit-input-placeholder {
+    color: #aaa;
+    user-select: none;
+  }
+}
+
+.drag_layer {
+  position: absolute;
+  top: 0;
+  height: var(--main-input-height);
+  left: 14px;
+  z-index: 2;
+  width: 100vw;
+}
+
+.autoHolder {
+  top: calc(-1 * var(--main-input-height));
+  z-index: 0;
+  color: #aaa;
+}

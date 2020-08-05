@@ -1,50 +1,80 @@
 {
-  "parser": "babel-eslint",
-  "extends": "airbnb",
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": {
+          "@": "src"
+        }
+      }
+    },
+    "react": {
+      "createClass": "createReactClass",
+      "pragma": "React",
+      "version": "detect",
+      "flowVersion": "0.53"
+    }
+  },
   "env": {
     "browser": true,
-    "mocha": true,
+    "es6": true,
     "node": true
   },
-  "rules": {
-    "consistent-return": 0,
-    "comma-dangle": 0,
-    "no-use-before-define": 0,
-    "no-console": 0,
-    "semi": ["error", "never"],
-    "no-confusing-arrow": ["off"],
-    "no-useless-escape": 0,
-    "no-mixed-operators": "off",
-    "no-continue": "off",
-    "import/no-extraneous-dependencies": "off",
-    "import/imports-first": "off",
-    "import/extensions": "off",
-    "react/jsx-no-bind": 0,
-    "react/prefer-stateless-function": 0,
-    "react/no-string-refs": "off",
-    "react/forbid-prop-types": "off",
-    "react/no-unused-prop-types": "off",
-    "react/no-danger": "off",
-    "react/require-default-props": "off",
-    "react/jsx-filename-extension": "off",
-    "react/no-unescaped-entities": "off",
-    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-    "prefer-spread": "off",
-    "class-methods-use-this": "off",
-    "jsx-a11y/no-static-element-interactions": "off",
-    "jsx-a11y/label-has-for": "off"
+  "extends": ["airbnb", "prettier", "argreion"],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly",
+    "mainRpc": "readonly",
+    "platform": "readonly"
   },
-  "plugins": [
-    "jsx-a11y",
-    "import",
-    "react"
-  ],
-  "settings": {
-    "import/core-modules": "electron",
-    "import/resolver": {
-      "webpack": {
-        "config": "../webpack.config.base.js"
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2015
+  },
+  "plugins": ["react", "prettier"],
+  "rules": {
+    "line-comment-position": "off",
+    "no-warning-comments": "off",
+    "import/no-unresolved": "off",
+    "import/no-cycle": "off",
+    "max-lines": "off",
+    "complexity": "off",
+    "promise/always-return": "off",
+    "@typescript-eslint/indent": "off",
+    "indent": "off",
+
+    "unicorn/filename-case": "off",
+    "promise/catch-or-return": "off",
+    "func-style": "off",
+    "implicit-arrow-linebreak": "off",
+    "require-unicode-regexp": "off",
+    "multiline-comment-style": "off",
+    "node/no-unsupported-features/es-syntax": "off",
+    "node/no-unpublished-require": "off",
+    "react/display-name": "off",
+    "react/prop-types": "off",
+    "space-before-function-paren": "off",
+    "jsx-quotes": "off",
+    "react/destructuring-assignment": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/no-array-index-key": "off",
+    "unicorn/prefer-query-selector": "off",
+    "prettier/prettier": "error",
+    "react/no-unused-state": "warn",
+    "no-unused-vars": "warn",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/prefer-stateless-function": "off",
+    "import/no-extraneous-dependencies": "off",
+    "class-methods-use-this": "off",
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      {
+        "labelComponents": ["CustomInputLabel"],
+        "labelAttributes": ["label"],
+        "controlComponents": ["CustomInput"],
+        "depth": 3
       }
-    }
+    ]
   }
 }
