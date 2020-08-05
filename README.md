@@ -1,19 +1,17 @@
 # Intro
 
+Most of the code source comes from [cerebro](https://github.com/KELiON/cerebro),renamed MyBing!!!
+
 通过修改 cerebro, 1：完成自己想要的功能，2：移植 utools 插件！
 
-
-
-
-
-
 # TODO
-utools 插件：upx 
+
+utools 插件：upx
 unicode webpack
 
 # Problems
-1. window 权限，无法拖拽！：https://github.com/electron/electron/issues/12460
 
+1. window 权限，无法拖拽！：https://github.com/electron/electron/issues/12460
 
 # Refs
 

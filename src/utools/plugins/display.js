@@ -2,6 +2,7 @@ import { BrowserView, session, webContents, BrowserWindow } from 'electron'
 import path from 'path'
 import { INPUT_HEIGHT, getBorderWidth } from '@/constants/ui'
 import { pluginDir } from '@/common/plugins/base'
+import { getSettings } from './base'
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -18,6 +19,7 @@ const runningPluginPool = {}
 
 const displayPluginView = (pluginView, upxJson) => {
   console.log('displayPluginView', pluginView, upxJson)
+  const { name } = upxJson
   const mainWindowBorderWidth = getBorderWidth()
 
   // main Window
@@ -33,7 +35,7 @@ const displayPluginView = (pluginView, upxJson) => {
     x: mainWindowBorderWidth,
     y: INPUT_HEIGHT,
     width: 650 - mainWindowBorderWidth * 2,
-    height: 400
+    height: getSettings(name).height
   })
 
   mainWindow.setBrowserView(pluginView)
@@ -53,7 +55,7 @@ export const compileUpxPlugin = (upxPath, upxJson) => {
 
   const pluginSession = session.fromPartition(`<plugin:${name}>`)
 
-  pluginSession.setPreloads([path.resolve(__dirname, '../../preload/upx.js')])
+  pluginSession.setPreloads([path.resolve(__dirname, '../../presload/upx.js')])
 
   const options = {
     textAreasAreResizable: false,

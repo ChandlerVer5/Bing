@@ -11,7 +11,17 @@ global.pluginsPool = {}
  */
 function isInapplicable(platform) {
   // TODO notification
-  return !platform.includes(global.platform.os)
+  return platform ? !platform.includes(global.platform.os) : false
+}
+
+export const getSettings = (name) => {
+  const defaultSettings = {
+    single: false,
+    height: '100%'
+  }
+
+  console.log(global.pluginsPool[`${name}@0`])
+  return global.pluginsPool[`${name}@0`].pluginSetting || defaultSettings
 }
 
 /**
@@ -23,9 +33,10 @@ export const parseUpxJson = (plugName) => {
   const upxJson = requireFunc(`${pluginDir}/${plugName}.asar/plugin.json`)
   if (isInapplicable(upxJson.platform)) return null
   const plugins = []
-  upxJson.features.forEach((feature) => {
+
+  upxJson.features.forEach((feature, i) => {
     const tempUpx = { ...upxJson, pluginId: `${upxJson.name}@${feature.code}`, features: [feature] }
-    global.pluginsPool[`${upxJson.name}@${feature.code}`] = tempUpx
+    global.pluginsPool[`${upxJson.name}@${i}`] = tempUpx
     plugins.push(tempUpx)
   })
   return plugins
