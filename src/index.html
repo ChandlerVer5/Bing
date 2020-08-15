@@ -8,43 +8,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title><%= htmlWebpackPlugin.options.title %></title>
-	<style>
-		#root {
-			/* 窗口边框设置 */
-			height: 100vh;
-			border: 2px solid #cecece;
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			overflow: hidden;
-		}
-	</style>
-	<script>
-      //(function() {
-      //  if (!process.env.HOT) {
-      //    const link = document.createElement('link');
-      //    link.rel = 'stylesheet';
-      //    link.href = '../dist/main.css';
-      //    document.write(link.outerHTML);
-      //  }
-      //}());
-	</script>
 </head>
 
 <body>
 	<div id="root">
 	</div>
-
-	<script>
-      //(function () {
-      //  const script = document.createElement('script');
-      //  script.async = true;
-      //  script.src = (process.env.HOT) ? 'http://localhost:3000/bundle/renderer.bundle.js' : '../bundle/renderer.bundle.js';
-      //  document.write(script.outerHTML);
-      //}());
-	</script>
 </body>
 
 </html>

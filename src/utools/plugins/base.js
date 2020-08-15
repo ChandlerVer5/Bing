@@ -1,10 +1,10 @@
 // plugin from utools,LOL \u{1F606}
-import zlib from 'zlib'
-import fs from 'fs'
 import path from 'path'
 import { requireFunc, pluginDir } from '@/common/plugins/base'
+import { MAX_WINDOW_HEIGHT } from '@/constants/ui'
+import { compileUpxPlugin } from './display'
 
-global.pluginsPool = {}
+global.upxPluginsPool = {} // for all upx plugin initialize
 
 /**
  * @description 如果不适用该平台则返回 null,并 notification
@@ -14,14 +14,15 @@ function isInapplicable(platform) {
   return platform ? !platform.includes(global.platform.os) : false
 }
 
-export const getSettings = (name) => {
+// plugin asar' path
+export const upxFilePath = (plugName, resName) => path.resolve(pluginDir, `${plugName}.asar`, resName || '')
+
+export const getSettings = (id) => {
   const defaultSettings = {
     single: false,
-    height: '100%'
+    height: MAX_WINDOW_HEIGHT
   }
-
-  console.log(global.pluginsPool[`${name}@0`])
-  return global.pluginsPool[`${name}@0`].pluginSetting || defaultSettings
+  return global.upxPluginsPool[id].pluginSetting || defaultSettings
 }
 
 /**
@@ -31,17 +32,31 @@ export const getSettings = (name) => {
  */
 export const parseUpxJson = (plugName) => {
   const upxJson = requireFunc(`${pluginDir}/${plugName}.asar/plugin.json`)
+  // TODO:没有main 字段，就是 list 列表
   if (isInapplicable(upxJson.platform)) return null
   const plugins = []
+  global.upxPluginsPool[upxJson.name] = { ...upxJson, fileName: plugName }
 
   upxJson.features.forEach((feature, i) => {
-    const tempUpx = { ...upxJson, pluginId: `${upxJson.name}@${feature.code}`, features: [feature] }
-    global.pluginsPool[`${upxJson.name}@${i}`] = tempUpx
+    const tempUpx = { ...upxJson, pluginId: `${upxJson.name}@${i}`, features: [feature] }
     plugins.push(tempUpx)
   })
   return plugins
 }
 
-export default (dir) => {
-  console.log(dir)
+/**
+ * @description open upx
+ * which feature be opened?
+ */
+export const showUpx = (upxId, featureCode) => {
+  const upxJson = global.upxPluginsPool[upxId]
+  console.log(featureCode)
+  // 确认选择后，才能打开
+  compileUpxPlugin(upxFilePath(upxJson.fileName), upxJson)
+}
+
+// 关闭插件释放资源！
+export const closeUpx = (upxId) => {
+  const upxJson = global.upxPluginsPool[upxId]
+  // view.destroy()
 }

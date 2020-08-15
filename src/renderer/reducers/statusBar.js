@@ -1,4 +1,4 @@
-/* eslint no-shadow: [2, { "allow": ["comments"] }] */
+/* eslint-disable default-param-last */
 
 import { SET_STATUS_BAR_TEXT } from '@/constants/actionTypes'
 

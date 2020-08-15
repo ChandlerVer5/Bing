@@ -2,11 +2,11 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  padding: 5px;
+  padding: 4px;
   border-radius: 5px 0 0 0;
   border: var(--main-border);
   color: var(--secondary-font-color);
   background: var(--preview-input-background);
   border-width: 1px 0 0 1px;
-  font-size: .75em;
+  font-size: 0.75em;
 }

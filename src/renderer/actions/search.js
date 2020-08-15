@@ -60,8 +60,8 @@ function onResultFound(term, result) {
   return {
     type: SHOW_RESULT,
     payload: {
-      result,
-      term
+      term,
+      result
     }
   }
 }

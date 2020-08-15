@@ -1,8 +1,10 @@
-import { BrowserView, session, webContents, BrowserWindow } from 'electron'
+import { BrowserView, session, screen } from 'electron'
 import path from 'path'
-import { INPUT_HEIGHT, getBorderWidth } from '@/constants/ui'
-import { pluginDir } from '@/common/plugins/base'
+import { INPUT_HEIGHT, WINDOW_WIDTH, MAX_WINDOW_HEIGHT, getBorderWidth } from '@/constants/ui'
 import { getSettings } from './base'
+import { triggerUpxEvent } from '../api/execJs'
+import { upxApiOn } from '../api/ipc'
+import { getMainWindow } from '../api/helper'
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -14,52 +16,87 @@ const isDev = process.env.NODE_ENV === 'development'
                 detachWindows: []
             },
  */
+global.runningUpxPlugins = {}
 
-const runningPluginPool = {}
+/**
+ * 不允许再设置高度！
+ */
+function disableResizeHeight(mainWindow, pluginSettingHeight) {
+  const borderWidth = getBorderWidth()
+  // TODO :需测试多显示
+  const { width } = screen.getPrimaryDisplay().workAreaSize
 
-const displayPluginView = (pluginView, upxJson) => {
-  console.log('displayPluginView', pluginView, upxJson)
+  mainWindow.setMinimumSize(WINDOW_WIDTH + 2 * borderWidth, pluginSettingHeight + 2 * borderWidth)
+  mainWindow.setMaximumSize(width + 2 * borderWidth, pluginSettingHeight + INPUT_HEIGHT * 2 + 2 * borderWidth)
+}
+
+/**
+ * destroy plugin
+ */
+const destroyPlugin = (name) => {
+  global.runningUpxPlugins[name].view.destroy()
+  delete global.runningUpxPlugins[name]
+}
+
+/**
+ * @description 原窗口分离，在调出主窗口
+ */
+/* const detachView = (single) => {
+  console.log(single)
+} */
+
+const displayPluginView = (upxJson, pluginView) => {
+  upxApiOn()
   const { name } = upxJson
   const mainWindowBorderWidth = getBorderWidth()
+  let { single, height } = getSettings(name)
 
   // main Window
-  const mainWindow = BrowserWindow.fromId(global.mainWinId)
-  const mainBounds = mainWindow.getBounds()
+  const mainWindow = getMainWindow()
+  const pluginViewWidth = mainWindow.getSize()[0]
 
+  if (height) {
+    disableResizeHeight(mainWindow, height)
+  } else {
+    height = MAX_WINDOW_HEIGHT
+  }
+
+  console.log(upxJson, global.upxPluginsPool)
+  // triggerUpxEvent(name, 'PluginEnter'，{code, type, payload, optional}) // when upx every time open
+
+  // pluginView.webContents.focus()
+  mainWindow.setResizable(true)
+  mainWindow.setSize(pluginViewWidth, height + INPUT_HEIGHT * 2 + 4)
+  mainWindow.addBrowserView(pluginView)
+
+  // 最后设置 bounds
+  pluginView.setBounds({
+    x: mainWindowBorderWidth,
+    y: INPUT_HEIGHT + mainWindowBorderWidth,
+    width: pluginViewWidth - mainWindowBorderWidth * 2,
+    height: height + INPUT_HEIGHT
+  })
   pluginView.setAutoResize({
     width: true,
     height: true
   })
-
-  pluginView.setBounds({
-    x: mainWindowBorderWidth,
-    y: INPUT_HEIGHT,
-    width: 650 - mainWindowBorderWidth * 2,
-    height: getSettings(name).height
-  })
-
-  mainWindow.setBrowserView(pluginView)
-
-  pluginView.webContents.focus()
-
-  console.log('mainBounds', mainBounds)
-  mainWindow.setSize(646, 600)
 }
 
 /**
- * @param {json} upxJson upx's plugin.json
+ * compile utools's plugin and display it
+ * @param {upxPath} upxPath upx's plugin asar path
+ * @param {upxJson} upxJson upx's plugin json format
  */
 export const compileUpxPlugin = (upxPath, upxJson) => {
-  // const { name, pluginName, features, preload } = configs
   const { name, pluginId, pluginName, features, preload, main } = upxJson
 
-  const pluginSession = session.fromPartition(`<plugin:${name}>`)
+  const upxSession = session.fromPartition(`<plugin:${name}>`)
 
-  pluginSession.setPreloads([path.resolve(__dirname, '../../presload/upx.js')])
+  const preloadPath = isDev ? path.join(__dirname, '../../../app/preload/upx.js') : path.join(__dirname, 'preload', 'upx.js')
+  upxSession.setPreloads([preloadPath])
 
   const options = {
     textAreasAreResizable: false,
-    // devTools: e.isDev || e.unsafe,
     devTools: true,
     nodeIntegration: false,
     nodeIntegrationInWorker: false,
@@ -68,7 +105,7 @@ export const compileUpxPlugin = (upxPath, upxJson) => {
     allowRunningInsecureContent: false,
     navigateOnDragDrop: false,
     spellcheck: false,
-    session: pluginSession,
+    session: upxSession,
     defaultFontSize: 14,
     defaultFontFamily: {
       standard: 'system-ui',
@@ -76,7 +113,7 @@ export const compileUpxPlugin = (upxPath, upxJson) => {
     }
   }
 
-  preload ? (options.preload = preload) : ''
+  preload && (options.preload = path.resolve(upxPath, preload))
 
   const view = new BrowserView({
     webPreferences: options
@@ -85,33 +122,32 @@ export const compileUpxPlugin = (upxPath, upxJson) => {
   view.webContents.openDevTools()
 
   view.webContents.loadURL(path.resolve(upxPath, main))
-  view.webContents.insertCSS(
-    `
+
+  view.webContents.once('dom-ready', (e) => {
+    global.runningUpxPlugins[name] = {
+      view,
+      detachWindows: []
+    }
+
+    // onLy Once
+    triggerUpxEvent(name, 'PluginReady') // onPluginReady
+
+    view.webContents.insertCSS(
+      `
+      html:{border-bottom:2px #ccc solid}
       ::-webkit-scrollbar-track-piece{ background-color: #fff;}
       ::-webkit-scrollbar{ width:8px; height:8px; }
       ::-webkit-scrollbar-thumb{ background-color: #e2e2e2; -webkit-border-radius: 4px; border: 2px solid #fff; }
       ::-webkit-scrollbar-thumb:hover{ background-color: #9f9f9f;}
       `
-  )
-  view.webContents.once('dom-ready', (e) => {
-    runningPluginPool[name] = {
-      view,
-      detachWindows: []
-    }
+    )
 
-    displayPluginView(view, upxJson)
+    displayPluginView(upxJson, view)
   })
 
   view.webContents.once('crashed', (e) => {
     console.log('crashed', e)
   })
-
-  /* e.name in this.runningPluginPool
-    ? (this.runningPluginPool[e.name].view = a)
-    : (this.runningPluginPool[e.name] = {
-        view: a,
-        detachWindows: []
-      }) */
 
   /* const win = new BrowserWindow({
   webPreferences:pluginWinOptions
@@ -140,4 +176,6 @@ export const compileUpxPlugin = (upxPath, upxJson) => {
   view.webContents.loadURL('https://baidu.com') */
 }
 
-export const compilePlugin = () => {}
+export const enterPlugin = () => {
+  // 从缓存中取出，还是去编译
+}

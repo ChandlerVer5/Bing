@@ -1,8 +1,8 @@
 {
-  "name": "electron-react",
-  "version": "1.0.0",
-  "productName": "electron_react",
-  "description": "electron - React",
+  "name": "MyBing",
+  "version": "0.4.0",
+  "productName": "MyBing",
+  "description": "Extendable electron-based open-source Spotlight and Alfred analogue",
   "author": "YoFoon",
   "license": "MIT",
   "engines": {
@@ -17,7 +17,7 @@
     "format": "prettier --write 'src/**/*.{js,jsx,css,scss}'",
     "clear": "rm -rf ./app/* && rm -rf ./dist/* && cp ./src/main/package.json ./app/",
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot --config=./webpack/webpack.dev.config.js",
-    "start-electron": "npm run build-preload && cross-env NODE_ENV=development nodemon -e js --watch ./src/main --watch ./src/utools --watch ./src/common --exec electron -r .",
+    "start-electron": "npm run build-preload && cross-env NODE_ENV=development nodemon -e js --watch ./src/main --watch ./src/utools --watch ./src/common --exec electron .",
     "build-preload": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.preload.config.js --progress --profile --colors",
     "build-main": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.electron.config.js --progress --profile --colors",
     "pack": "build --dir",
@@ -31,8 +31,8 @@
     "builder": "npm run build &&  electron-builder --mac --x64 && electron-builder --win --x64 --ia32"
   },
   "build": {
-    "appId": "com.YoFoon.www",
-    "productName": "electron_react",
+    "appId": "com.chandlerver5.www",
+    "productName": "MyBing",
     "directories": {
       "output": "dist"
     },

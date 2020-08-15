@@ -18,13 +18,14 @@ export default ({ configs, src, isDev, getWinPosition }) => {
     minWidth: WINDOW_WIDTH,
     height: INPUT_HEIGHT,
     maxHeight: INPUT_HEIGHT,
-    alwaysOnTop: !0,
+    alwaysOnTop: true,
     x,
     y,
     // empty title
     title: '',
     frame: false,
     resizable: false,
+    transparent: false,
     // acceptFirstMouse: true,
     // 移除窗口的阴影和动画，否则看起来卡顿一样~
     thickFrame: false,
@@ -36,11 +37,12 @@ export default ({ configs, src, isDev, getWinPosition }) => {
       // session: this.getMainWindwoSession(),
       enableRemoteModule: true,
       nodeIntegration: process.env.NODE_ENV === 'development',
-      webSecurity: process.env.NODE_ENV !== 'development',
-      allowRunningInsecureContent: process.env.NODE_ENV === 'development',
+      webSecurity: false,
+      // webSecurity: process.env.NODE_ENV !== 'development',
+      // allowRunningInsecureContent: process.env.NODE_ENV === 'development',
       backgroundThrottling: false,
       navigateOnDragDrop: false,
-      preload: process.env.NODE_ENV === 'development' ? path.join(__dirname, '../../app/preload.js') : path.join(__dirname, 'preload.js')
+      preload: process.env.NODE_ENV === 'development' ? path.join(__dirname, '../../app/preload/preload.js') : path.join(__dirname, 'preload', 'preload.js')
     }
   }
 

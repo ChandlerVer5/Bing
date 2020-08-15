@@ -95,7 +95,7 @@ module.exports = merge(baseConfig, {
     before() {
       console.log('Starting Main Process...')
       spawn('npm', ['run', 'start-electron'], {
-        // 在运行这个server之前会运行package.json里的`start-main-dev`指令，文章下面会配置。
+        // 在运行这个 server 之前会运行 package.json 里的`start-electron`指令
         shell: true,
         env: process.env,
         stdio: 'inherit'

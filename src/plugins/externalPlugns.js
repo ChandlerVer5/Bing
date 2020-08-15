@@ -31,12 +31,12 @@ export default () => {
 
   // pluginName == pluinName ,id
   Object.keys(pluginConfigs('utools')).forEach((pluginName) => {
-    const upxPlugins = mainRpc.utools.parseUpxJson(pluginName)
+    const upxPlugins = window.upxRpc.parseUpxJson(pluginName)
     // console.log(upxPlugins)
     // 需要适配
     upxPlugins &&
       upxPlugins.forEach((upx) => {
-        plugins[upx.pluginId] = mainRpc.utools.adaptPlugin(pluginName, upx)
+        plugins[upx.pluginId] = window.upxRpc.adaptPlugin(pluginName, upx)
       })
   })
 

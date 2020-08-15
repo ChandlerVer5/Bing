@@ -1,4 +1,5 @@
-/* eslint no-shadow: [2, { "allow": ["comments"] }] */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable default-param-last */
 import uniq from 'lodash/uniq'
 import orderBy from 'lodash/orderBy'
 
@@ -34,14 +35,14 @@ function normalizeSelection(index, length) {
 }
 
 // Function that does nothing
-const noon = () => {}
+const noop = () => {}
 
 function normalizeResult(result) {
   return {
     ...result,
-    onFocus: result.onFocus || noon,
-    onBlur: result.onFocus || noon,
-    onSelect: result.onSelect || noon
+    onFocus: result.onFocus || noop,
+    onBlur: result.onFocus || noop,
+    onSelect: result.onSelect || noop
   }
 }
 

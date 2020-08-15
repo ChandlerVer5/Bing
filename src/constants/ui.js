@@ -1,15 +1,14 @@
 // Height of main input
-export const INPUT_HEIGHT = 54
+export const INPUT_HEIGHT = 56
 
 // Heigth of default result line
 export const RESULT_HEIGHT = 48
 
 // size of main window
-export const WINDOW_WIDTH = 650
+export const WINDOW_WIDTH = 724
 
-// this.isWindow ? this.mainWindowBorderWidth = 2 : this.isLinux ? this.mainWindowBorderWidth = 1 : this.mainWindowBorderWidth = 0
 export const getBorderWidth = () => (global.platform.isWinOS ? 2 : global.platform.isMacOS ? 0 : 1)
-export const MAX_WINDOW_HEIGHT = 534
+export const MAX_WINDOW_HEIGHT = RESULT_HEIGHT * 10 + INPUT_HEIGHT + 2 * 2 // 48 * 10 + 56, border width*2!
 
 // Maximum results that would be rendered
 export const MAX_RESULTS = 25

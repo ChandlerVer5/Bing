@@ -8,6 +8,13 @@ const services = remote.getGlobal('services')
 
 console.log('preload.js loaded!')
 
+window.upxRpc = {
+  parseUpxJson: (pluginName) => services.parseUpxJson(pluginName),
+  adaptPlugin: (upxName, pluginName) => services.adaptPlugin(upxName, pluginName),
+  showUpx: (upxId) => services.showUpx(upxId),
+  sendUpxEvent: (name, type, data) => services.sendUpxEvent(name, type, data)
+}
+
 window.mainRpc = {
   remote,
   // cerebro need!
@@ -30,12 +37,6 @@ window.mainRpc = {
     update: (name) => services.updatePlugin(name),
     compileUpxPlugin: (name) => services.compileUpxPlugin(name)
   },
-  utools: {
-    upxPath: (fileName) => path.join(remote.app.getPath('userData'), 'plugins', fileName + '.asar'),
-    parseUpxJson: (pluginName) => services.parseUpxJson(pluginName),
-    adaptPlugin: (upxName, pluginName) => services.adaptPlugin(upxName, pluginName)
-  },
-
   getConfig: services.getConfig,
   setConfig: services.getConfig,
   getWinPosition: services.getWinPosition,

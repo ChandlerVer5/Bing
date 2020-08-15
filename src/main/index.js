@@ -1,7 +1,9 @@
 /* eslint-disable promise/no-nesting */
 import { app, ipcMain, crashReporter } from 'electron'
 import path from 'path'
-import { compileUpxPlugin, parseUpxJson, adaptPlugin } from '@/utools/plugins'
+import { compileUpxPlugin, parseUpxJson, adaptPlugin, showUpx } from '@/utools/plugins' // for UPX
+import { sendUpxEvent } from '@/utools/api/execJs' // for UPX
+import { upxAppOn } from '@/utools/api/ipc' // for UPX
 
 import configs from '../common/app-settings'
 import windowMove from '../common/windowMove'
@@ -61,8 +63,11 @@ app.whenReady().then(() => {
     getPluginsInDev,
     compileUpxPlugin,
     parseUpxJson,
-    adaptPlugin
+    showUpx,
+    adaptPlugin,
+    sendUpxEvent
   })
+  upxAppOn() // listen to upx's renderer's Send message
 
   // eslint-disable-next-line lines-around-comment
   /*   if (process.env.NODE_ENV === 'development') {

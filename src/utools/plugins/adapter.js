@@ -1,10 +1,8 @@
 // import { search } from 'cerebro-tools'
-import { pluginDir } from '@/common/plugins/base'
-import { compileUpxPlugin } from './display'
-import path from 'path'
+import { upxFilePath } from './base'
 
 const onSelect = (event) => {
-  console.log('global.pluginsPool', global.pluginsPool, event)
+  console.log('global.upxPluginsPool', global.upxPluginsPool, event)
 
   event.preventDefault()
 }
@@ -20,27 +18,26 @@ const onSelect = (event) => {
 
 export default (upxName, upx) => {
   const { code: name, explain: subtitle } = upx.features[0]
-  const upxFilePath = path.resolve(pluginDir, `${upxName}.asar`)
   const keyword = upx.features[0].cmds[0]
 
   const fn = ({ term, display }) => {
     const match = term.match(new RegExp(keyword))
     if (match) {
-      console.log(term, display)
-      compileUpxPlugin(upxFilePath, upx)
+      // TODO: something from user's main Input
       // openpluginView
       // display({ icon: upx.logo, title: name, subtitle, onSelect })
     }
   }
 
   return {
+    upxFile: upxName,
+    upxId: upx.name,
     pluginName: upx.pluginName,
-    upx: true,
     keyword,
     title: name,
     subtitle,
     fn,
-    icon: path.resolve(upxFilePath, upx.logo),
+    icon: upxFilePath(upxName, upx.logo),
     name
   }
 }

@@ -11,7 +11,7 @@ const preloadConfig = require('./webpack.preload.config')
  * @param {string} env
  */
 
-const rendererConfig = merge(baseConfig, {
+const rendererConfig = {
   mode: process.env.NODE_ENV,
   entry: {
     // polyfills: ["@babel/polyfill", "event-source-polyfill"],
@@ -59,17 +59,17 @@ const rendererConfig = merge(baseConfig, {
     })
   ],
   optimization: {
-    minimize: false
+    minimize: true
   },
   target: 'electron-renderer'
-})
+}
 
 /**
  * WEBPACK CONFIGS
  */
 module.exports = () => {
   const env = process.env.NODE_ENV
-  const mergedConfig = [mainConfig, preloadConfig, rendererConfig].map((config) => merge(baseConfig, config))
-  console.log('mergedConfig', env, mergedConfig)
-  return mergedConfig
+  const mergedConfig = [mainConfig, rendererConfig].map((config) => merge(baseConfig, config))
+  console.log('mergedConfig', env, mergedConfig) //preloadConfig[0],
+  return [...mergedConfig, ...preloadConfig]
 }

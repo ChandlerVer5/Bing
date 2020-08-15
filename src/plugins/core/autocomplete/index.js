@@ -3,13 +3,17 @@ import { flow, filter, map, partialRight, values } from 'lodash/fp'
 import getPlugins from '../..'
 
 const toString = (plugin) => plugin.keyword
-const notMatch = (term) => (plugin) => plugin.keyword !== term && `${plugin.keyword} ` !== term
+const notMatch = (term) => (plugin) => plugin.keyword !== term && plugin.keyword !== term
 
 const pluginToResult = (actions) => (res) => ({
-  title: res.name,
+  upxFile: res.upxFile, // TODO need+
+  // plugin: res.upxFile, // TODO selected Plugin name
+  upxId: res.upxId, // flag for utools's plugin,is upx' name
+  title: res.name, // upx'json code
   icon: res.icon,
-  term: `${res.keyword} `,
+  term: `${res.keyword} `, // upx'json one of cmds
   onSelect: (event) => {
+    res.upxId && window.upxRpc.showUpx(res.upxId, res.name)
     event.preventDefault()
     actions.replaceTerm(`${res.keyword} `)
   }

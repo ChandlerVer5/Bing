@@ -39,7 +39,7 @@ class MainInput extends Component {
     this.dragLayerRef.current.style.left = `${width + 14}px`
     this.autoTextRef.current.scrollLeft = this.inputRef.current.scrollLeft
     setTimeout(() => {
-      this.inputRef.current.scrollLeft = width
+      this.inputRef.current && (this.inputRef.current.scrollLeft = width)
     }, 500)
   }
 
