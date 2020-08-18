@@ -63,7 +63,7 @@ export default () => {
           (response) => {
             if (response === 1) {
               const url = findInstaller(release.assets)
-              mainRpc.shellOpenExternal(url)
+              MainRpc.shellOpenExternal(url)
             }
           }
         )

@@ -2,27 +2,24 @@ import { BrowserWindow, BrowserView } from 'electron'
 
 export const getMainWindow = () => BrowserWindow.fromId(global.mainWinId)
 
-export const getViewById = (upxName) => global.runningUpxPlugins[upxName]
+/**
+ * @returns {Object}
+ */
+export const getRunningUpxById = (upxId) => global.runningUpxPlugins[upxId]
 
-export const getPluginIdByWebContents = (contents) => {
-  const plgs = global.runningUpxPlugins
-  Object.keys(plgs).forEach((id) => {
-    if (plgs[id].view.webContents === contents) {
-      return id
-    }
-    return null
-  })
+export const getUpxIdByWebContents = (contents) => {
+  const { upxId } = BrowserView.fromWebContents(contents)
+  return upxId
 }
 
+/**
+ * todo : if  upx autoDetached?
+ * @param {Electron.WebContents} WebContents e.sender is WebContents TYPE！
+ */
 export const getWorkWebContentsBySender = (contents) => {
   const bview = BrowserView.fromWebContents(contents)
-  if (!bview) return null
+  const { view, detachedWins } = getRunningUpxById(bview.upxId)
   const bwindow = BrowserWindow.fromBrowserView(bview)
-  if (!bwindow) return null
   if (bwindow === getMainWindow()) return getMainWindow().webContents
-  const name = this.getPluginIdByWebContents(contents)
-  if (!name) return null
-  const o = getViewById(name)
-  console.log('!!!getWorkWebContentsBySender', name)
-  return o && o.detachWindows.includes(bwindow) ? bwindow.webContents : null
+  return !view && detachedWins.includes(bwindow) ? bwindow.webContents : null
 }

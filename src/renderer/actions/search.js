@@ -12,15 +12,15 @@ const plugins = getPlugins()
  */
 const DEFAULT_SCOPE = {
   config: {
-    get: mainRpc.getConfig,
-    set: mainRpc.setConfig
+    get: MainRpc.getConfig,
+    set: MainRpc.setConfig
   },
   actions: {
-    open: (q) => mainRpc.shellOpenExternal(q),
-    reveal: (q) => mainRpc.shellShowItemInFolder(q),
-    copyToClipboard: (q) => mainRpc.copyToClipboard(q),
+    open: (q) => MainRpc.shellOpenExternal(q),
+    reveal: (q) => MainRpc.shellShowItemInFolder(q),
+    copyToClipboard: (q) => MainRpc.copyToClipboard(q),
     replaceTerm: (term) => store.dispatch(updateItem(term)),
-    hideWindow: () => mainRpc.currentWindowHide()
+    hideWindow: () => MainRpc.currentWindowHide()
   }
 }
 

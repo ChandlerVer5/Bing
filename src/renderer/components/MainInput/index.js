@@ -59,7 +59,7 @@ class MainInput extends Component {
 
   // 拖动移动三兄弟
   windowMove(canMove) {
-    return mainRpc.rendererSend('window-move-open', canMove)
+    return MainRpc.rendererSend('window-move-open', canMove)
   }
 
   render() {

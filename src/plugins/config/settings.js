@@ -1,6 +1,6 @@
 import getPlugins from '..'
 
-const getSettings = (pluginName) => mainRpc.getConfig('plugins')[pluginName] || {}
+const getSettings = (pluginName) => MainRpc.getConfig('plugins')[pluginName] || {}
 
 export default (pluginName) => {
   const plugins = getPlugins()

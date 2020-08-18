@@ -16,12 +16,14 @@ const rendererConfig = {
   entry: {
     // polyfills: ["@babel/polyfill", "event-source-polyfill"],
     // vendor: ['react', 'react-dom', 'prop-types'],
-    main: Conf.ENTRY
+    renderer: Conf.ENTRY,
+    detach: `${Conf.SRC}/utools/detach/index.js`
   },
   output: {
     path: Conf.OUTPUT,
-    publicPath: './',
-    filename: 'renderer.bundle.js'
+    publicPath: './', // detach chunk correct path!
+    filename: (chunkData) => (chunkData.chunk.name === 'detach' ? 'detach/[name].bundle.js' : '[name].bundle.js')
+    // libraryTarget: 'umd'
   },
 
   module: {
@@ -55,7 +57,22 @@ const rendererConfig = {
       title: 'cerebro',
       filename: 'index.html',
       template: `${Conf.SRC}/index.html`,
-      hash: true
+      hash: true,
+      minify: true,
+      chunks: ['renderer']
+    }),
+    new HtmlWebpackPlugin({
+      title: 'cerebro',
+      filename: 'detach/index.html',
+      template: `${Conf.SRC}/utools/detach/index.html`,
+      hash: true,
+      minify: true,
+      templateParameters: (compilation, assets, assetTags, options) => {
+        const temp = assetTags.bodyTags[0].attributes.src
+        assetTags.bodyTags[0].attributes.src = temp.replace('detach/', '') // 修改 chunks 的脚本注入
+        return {}
+      },
+      chunks: ['detach'] // for none! hardcode in html's script injected
     })
   ],
   optimization: {
@@ -70,6 +87,6 @@ const rendererConfig = {
 module.exports = () => {
   const env = process.env.NODE_ENV
   const mergedConfig = [mainConfig, rendererConfig].map((config) => merge(baseConfig, config))
-  console.log('mergedConfig', env, mergedConfig) //preloadConfig[0],
+  console.log('mergedConfig', env, mergedConfig) // preloadConfig[0],
   return [...mergedConfig, ...preloadConfig]
 }

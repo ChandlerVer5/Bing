@@ -13,7 +13,7 @@ const pluginToResult = (actions) => (res) => ({
   icon: res.icon,
   term: `${res.keyword} `, // upx'json one of cmds
   onSelect: (event) => {
-    res.upxId && window.upxRpc.showUpx(res.upxId, res.name)
+    res.upxId && window.UpxRpc.showUpx(res.upxId, res.name)
     event.preventDefault()
     actions.replaceTerm(`${res.keyword} `)
   }

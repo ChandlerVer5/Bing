@@ -10,12 +10,12 @@ export default (store) => {
   initializePlugins()
 
   // Set theme from config
-  changeTheme(mainRpc.getConfig('theme'))
+  changeTheme(MainRpc.getConfig('theme'))
 
   // Handle `showTerm` rpc event and replace search term with payload
-  mainRpc.ipcOn('showTerm', (term) => store.dispatch(updateItem(term)))
+  MainRpc.ipcOn('showTerm', (term) => store.dispatch(updateItem(term)))
 
-  mainRpc.ipcOn(
+  MainRpc.ipcOn(
     'update-downloaded',
     () =>
       new Notification('Cerebro: update is ready to install', {
@@ -24,8 +24,8 @@ export default (store) => {
   )
 
   // Handle `updateTheme` rpc event and change current theme
-  // mainRpc.ipcOn("updateTheme", changeTheme);
+  // MainRpc.ipcOn("updateTheme", changeTheme);
 
   // Handle `reload` rpc event and reload window
-  mainRpc.ipcOn('reload', () => window.location.reload())
+  MainRpc.ipcOn('reload', () => window.location.reload())
 }

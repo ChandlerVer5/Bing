@@ -3,7 +3,7 @@ import loadPlugins from './loadPlugins'
 import getInstalledPlugins from './getInstalledPlugins'
 
 const DEFAULT_PLUGINS = [
-  mainRpc.isMacOS() ? 'cerebro-mac-apps' : 'cerebro-basic-apps',
+  MainRpc.isMacOS() ? 'cerebro-mac-apps' : 'cerebro-basic-apps',
   'cerebro-google',
   'cerebro-math',
   'cerebro-converter',
@@ -20,7 +20,7 @@ function checkForUpdates() {
     .then(
       flow(
         filter(property('isUpdateAvailable')),
-        map((plugin) => mainRpc.pluginClient.update(plugin.name))
+        map((plugin) => MainRpc.pluginClient.update(plugin.name))
       )
     )
     // eslint-disable-next-line promise/no-nesting
@@ -38,7 +38,7 @@ function checkForUpdates() {
  * so if default plugins are not installed – start installation
  */
 function migratePlugins(sendMessage) {
-  if (mainRpc.getConfig('isMigratedPlugins')) {
+  if (MainRpc.getConfig('isMigratedPlugins')) {
     // Plugins are already migrated
     return
   }
@@ -48,7 +48,7 @@ function migratePlugins(sendMessage) {
   getInstalledPlugins().then((installedPlugins) => {
     const promises = flow(
       filter((plugin) => !installedPlugins[plugin]),
-      map((plugin) => mainRpc.pluginClient.install(plugin))
+      map((plugin) => MainRpc.pluginClient.install(plugin))
     )(DEFAULT_PLUGINS)
 
     if (promises.length > 0) {

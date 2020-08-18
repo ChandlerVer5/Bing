@@ -1,7 +1,7 @@
 import getPlugins from '.'
 import { getPlugSettings } from './config'
 
-// const initPlugLoad = (pluginName) => mainRpc.pluginClient.requirePlugin(pluginName)
+// const initPlugLoad = (pluginName) => MainRpc.pluginClient.requirePlugin(pluginName)
 
 const plugins = getPlugins()
 
@@ -18,7 +18,7 @@ export const initPlugSetting = (name) => {
 
   if (initializeAsync) {
     // Background plugin initialization
-    // mainRpc.ipcSend('initializePluginAsync', { name })
+    // MainRpc.ipcSend('initializePluginAsync', { name })
     console.log('initializeAsync!!!', name)
   }
 }
@@ -28,11 +28,11 @@ export const initPlugSetting = (name) => {
  */
 export default () => {
   // Start listening for replies from plugin async initializers
-  /*  mainRpc.ipcOn('plugin.message', ({ name, data }) => {
+  /*  MainRpc.ipcOn('plugin.message', ({ name, data }) => {
     const plugin = plugins[name]
     if (plugin.onMessage) plugin.onMessage(data)
   }) */
-  // const plugins = mainRpc.pluginClient.pluginConfigs('cerebro')
+  // const plugins = MainRpc.pluginClient.pluginConfigs('cerebro')
 
   Object.keys(plugins).forEach(initPlugSetting)
 }

@@ -6,7 +6,7 @@
  */
 module.exports = function getFileIcon(path) {
   return new Promise((resolve, reject) => {
-    mainRpc.remote.app.getFileIcon(path, (err, icon) => {
+    MainRpc.remote.app.getFileIcon(path, (err, icon) => {
       if (err) return reject(err)
       resolve(icon.toDataURL())
     })

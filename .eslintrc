@@ -8,7 +8,6 @@
       }
     },
     "react": {
-      "createClass": "createReactClass",
       "pragma": "React",
       "version": "detect",
       "flowVersion": "0.53"
@@ -21,10 +20,8 @@
   },
   "extends": ["airbnb", "prettier", "argreion"],
   "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly",
-    "mainRpc": "readonly",
-    "upxRpc": "readonly",
+    "MainRpc": "readonly",
+    "UpxRpc": "readonly",
     "platform": "readonly"
   },
   "parserOptions": {
@@ -35,6 +32,7 @@
   },
   "plugins": ["react", "prettier"],
   "rules": {
+    "quotes": "warn",
     "no-unexpected-multiline": "off",
     "no-param-reassign": "off",
     "no-invalid-this": "off",

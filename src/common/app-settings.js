@@ -87,10 +87,10 @@ const set = (key, value) => {
     label: value
   })
 
-  if (global.mainRpc) {
+  if (global.MainRpc) {
     console.log('notify main process', key, value)
     // Notify main process about settings changes
-    mainRpc.rendererSend('updateSettings', key, value)
+    MainRpc.rendererSend('updateSettings', key, value)
   }
 }
 

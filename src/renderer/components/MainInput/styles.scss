@@ -12,6 +12,7 @@
   white-space: nowrap;
   /* cursor: default; */
   -webkit-app-region: no-drag;
+  -webkit-user-select: none;
   user-select: none;
   position: relative;
   z-index: 1;

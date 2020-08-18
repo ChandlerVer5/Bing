@@ -39,7 +39,7 @@ const pluginToResult = (update) => (plugin) => {
     id: plugin.name,
     title: `${format.name(plugin.name)} (${format.version(plugin)})`,
     subtitle: format.description(plugin.description || ''),
-    onSelect: () => mainRpc.shellOpenExternal(plugin.repo),
+    onSelect: () => MainRpc.shellOpenExternal(plugin.repo),
     getPreview: () => <Preview {...plugin} key={plugin.name} onComplete={() => updatePlugin(update, plugin.name)} />
   }
 }

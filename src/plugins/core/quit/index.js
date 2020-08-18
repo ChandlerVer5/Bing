@@ -4,7 +4,7 @@ import icon from '../icon.png'
 const KEYWORDS = ['Quit', 'Exit']
 
 const subtitle = 'Quit from Cerebro'
-const onSelect = () => mainRpc.quitApp()
+const onSelect = () => MainRpc.quitApp()
 
 /**
  * Plugin to exit from Cerebro

@@ -4,7 +4,7 @@
 
 :root {
   /* refs constants/ui.js */
-  --main-input-height: 56px;
+  --main-input-height: calc(56px - var(--main-border-width) * 2);
   --main-result-height: 48px;
   --main-border-width: 2px;
   /* scrollbar */

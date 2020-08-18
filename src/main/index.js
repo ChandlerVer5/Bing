@@ -1,20 +1,17 @@
 /* eslint-disable promise/no-nesting */
 import { app, ipcMain, crashReporter } from 'electron'
 import path from 'path'
-import { compileUpxPlugin, parseUpxJson, adaptPlugin, showUpx } from '@/utools/plugins' // for UPX
-import { sendUpxEvent } from '@/utools/api/execJs' // for UPX
-import { upxAppOn } from '@/utools/api/ipc' // for UPX
 
-import configs from '../common/app-settings'
-import windowMove from '../common/windowMove'
+import registerService from '@/common/services'
+
+import configs from '@/common/app-settings'
+import windowMove from '@/common/windowMove'
+import { trackEvent, screenView } from '@/common/trackEvent'
+import getWinPosition from '@/common/get-win-position'
 
 import createMainWindow from './create-main-win'
 import AppTray from './createWindow/app-tray'
 import autoStart from './createWindow/auto-start'
-import { trackEvent, screenView } from '../common/trackEvent'
-import { getInstallLists, getPluginsInDev } from '../common/plugins'
-import getWinPosition from '../common/get-win-position'
-import registerService from '../common/services'
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
 
@@ -53,22 +50,6 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 app.whenReady().then(() => {
-  // initServices
-  registerService({
-    getConfig: configs.get,
-    setConfig: configs.set,
-    getWinPosition,
-    trackEvent,
-    getInstallLists,
-    getPluginsInDev,
-    compileUpxPlugin,
-    parseUpxJson,
-    showUpx,
-    adaptPlugin,
-    sendUpxEvent
-  })
-  upxAppOn() // listen to upx's renderer's Send message
-
   // eslint-disable-next-line lines-around-comment
   /*   if (process.env.NODE_ENV === 'development') {
     mainWindow = createMainWindow({
@@ -85,14 +66,8 @@ app.whenReady().then(() => {
     src: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : `file://${path.join(__dirname, '/index.html')}`
   })
 
-  // init global variables
-  global.platform = {
-    os: process.platform,
-    isWinOS: process.platform === 'win32',
-    isMacOS: process.platform === 'darwin',
-    isLinux: process.platform !== 'darwin' && process.platform !== 'win32'
-  }
-  global.mainWinId = mainWindow.id
+  ipcMain.emit('APP_READY', { mainWinId: mainWindow.id })
+  registerService()
 
   // ---Track app start event---
   trackEvent({

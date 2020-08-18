@@ -1,11 +1,10 @@
 // import { search } from 'cerebro-tools'
 import { upxFilePath } from './base'
 
-const onSelect = (event) => {
+/* const onSelect = (event) => {
   console.log('global.upxPluginsPool', global.upxPluginsPool, event)
-
   event.preventDefault()
-}
+} */
 
 /**
  * Plugin to reload Cerebro
@@ -23,8 +22,6 @@ export default (upxName, upx) => {
   const fn = ({ term, display }) => {
     const match = term.match(new RegExp(keyword))
     if (match) {
-      // TODO: something from user's main Input
-      // openpluginView
       // display({ icon: upx.logo, title: name, subtitle, onSelect })
     }
   }

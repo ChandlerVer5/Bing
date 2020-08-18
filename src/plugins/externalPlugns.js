@@ -1,7 +1,7 @@
 const {
   requireFunc,
   pluginClient: { pluginDir, pluginConfigs }
-} = window.mainRpc
+} = window.MainRpc
 
 const requirePlugin = (plugName) => {
   let pluginModule = null
@@ -31,12 +31,13 @@ export default () => {
 
   // pluginName == pluinName ,id
   Object.keys(pluginConfigs('utools')).forEach((pluginName) => {
-    const upxPlugins = window.upxRpc.parseUpxJson(pluginName)
+    const upxPlugins = window.UpxRpc.parseUpxJson(pluginName)
     // console.log(upxPlugins)
     // 需要适配
     upxPlugins &&
       upxPlugins.forEach((upx) => {
-        plugins[upx.pluginId] = window.upxRpc.adaptPlugin(pluginName, upx)
+        // one name has alot of feature
+        plugins[upx.pluginId] = window.UpxRpc.adaptPlugin(pluginName, upx)
       })
   })
 

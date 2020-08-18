@@ -1,16 +1,23 @@
 /* eslint-disable max-params */
 import { Notification } from 'electron'
+import { getRunningUpxById } from './helper'
 
 /**
  * @description // FIXME 这里其实需要每次插件显示在前台，都要执行 onPluginEnter😅
- * @param {string} name upx's name equals to plugin's id
+ * @param {string} WebContent upx's name equals to plugin's id
+ * @param {string} execString javascript evaluate string
  */
-const execJS = (bview, execString) => {
+const execJS = (WebContent, execString) => {
   let promise = Promise.resolve('')
-  if (typeof bview === 'string') {
-    promise = global.runningUpxPlugins[bview].view.webContents.executeJavaScript(execString)
+  if (typeof WebContent === 'string') {
+    const { view, detachedWins } = getRunningUpxById(WebContent) // must have it!
+
+    console.log(view, detachedWins)
+    promise = view
+      ? view.webContents.executeJavaScript(execString)
+      : detachedWins[detachedWins.length - 1].getBrowserView().webContents.executeJavaScript(execString)
   } else {
-    promise = bview.executeJavaScript(execString)
+    promise = WebContent.executeJavaScript(execString)
   }
   return promise
 }

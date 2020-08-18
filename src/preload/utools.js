@@ -1,6 +1,9 @@
 import { shell } from 'electron'
-import { send, sendSync, sendApp, sendAppSync } from '@/utools/api/ipc'
+import { sendBase, sendBaseSync, sendApp, senAppSync } from '@/utools/api/ipc'
 
+/**
+ * this api could be modefied,so freeze it
+ */
 window.utools = Object.freeze({
   __event__: {},
   // 插件装配初始化完成触发
@@ -31,59 +34,59 @@ window.utools = Object.freeze({
   // 隐藏主窗口
   hideMainWindow: (isRestorePreWindow) => {
     if (isRestorePreWindow === false) {
-      send('hideMainWindow', isRestorePreWindow)
+      sendBase('hideMainWindow', isRestorePreWindow)
       return true
     }
-    return sendSync('hideMainWindow', true)
+    return sendBaseSync('hideMainWindow', true)
   },
 
   // 显示主窗口
-  showMainWindow: () => sendSync('showMainWindow'),
+  showMainWindow: () => sendBaseSync('showMainWindow'),
 
   // 设置插件高度
   setExpendHeight: (height) => {
-    return sendSync('setExpendHeight', height)
+    return sendBaseSync('setExpendHeight', height)
   },
   // 设置子输入框
   setSubInput: (onChange, placeholder = '', isFocus = true) => {
     if (typeof onChange !== 'function') return false
     window.utools.__event__.onSubInputChange = onChange
-    return send('setSubInput', { placeholder, isFocus })
+    return sendBaseSync('setSubInput', { placeholder, isFocus })
   },
   // 移除子输入框
   removeSubInput: () => {
     delete window.utools.__event__.onSubInputChange
-    return sendSync('removeSubInput')
+    return sendBaseSync('removeSubInput')
   },
   // 设置子输入框的值
   setSubInputValue: (value) => {
-    return sendSync('setSubInputValue', value)
+    return sendBaseSync('setSubInputValue', value)
   },
   // 子输入框获得焦点
   subInputFocus: () => {
-    return sendSync('subInputFocus')
+    return sendBaseSync('subInputFocus')
   },
   // 子输入框获得焦点并选中
   subInputSelect: () => {
-    return sendSync('subInputSelect')
+    return sendBaseSync('subInputSelect')
   },
   // 子输入框失去焦点
   subInputBlur: () => {
-    return sendSync('subInputBlur')
+    return sendBaseSync('subInputBlur')
   },
   // 创建窗口
   createBrowserWindow: (url, options) => {
-    const webContentsId = sendSync('createBrowserWindow', { url, options })
+    const webContentsId = sendBaseSync('createBrowserWindow', { url, options })
     if (typeof webContentsId === 'string') throw new Error(webContentsId)
     return webContentsId
   },
   // 隐藏插件
   outPlugin: () => {
-    send('outPlugin')
+    sendBase('outPlugin')
   },
   // 是否深色模式
   isDarkColors: () => {
-    return sendSync('isDarkColors')
+    return sendBaseSync('isDarkColors')
   },
   // 设置插件动态功能
   setFeature: (feature) => {
@@ -264,27 +267,27 @@ window.utools = Object.freeze({
   db: Object.freeze({
     // 创建/更新文档
     put: (doc) => {
-      return ipcRenderer.sendSync('api.db', 'put', doc)
+      return ipcRenderer.sendBaseSync('api.db', 'put', doc)
     },
     // 获取文档
     get: (id) => {
-      return ipcRenderer.sendSync('api.db', 'get', id)
+      return ipcRenderer.sendBaseSync('api.db', 'get', id)
     },
     // 删除文档 参数可以是 文档对象或id
     remove: (doc) => {
-      return ipcRenderer.sendSync('api.db', 'remove', doc)
+      return ipcRenderer.sendBaseSync('api.db', 'remove', doc)
     },
     // 批量操作文档(新增、修改、删除)
     bulkDocs: (docs) => {
-      return ipcRenderer.sendSync('api.db', 'bulkDocs', docs)
+      return ipcRenderer.sendBaseSync('api.db', 'bulkDocs', docs)
     },
     // 获取所有文档 可根据文档id前缀查找
     allDocs: (key) => {
-      return ipcRenderer.sendSync('api.db', 'allDocs', key)
+      return ipcRenderer.sendBaseSync('api.db', 'allDocs', key)
     },
     // 获取附件
     getAttachment: (key, attachmentId) => {
-      return ipcRenderer.sendSync('api.db', 'getAttachment', { key, attachmentId })
+      return ipcRenderer.sendBaseSync('api.db', 'getAttachment', { key, attachmentId })
     }
   })
   /* get ubrowser() {

@@ -5,7 +5,7 @@ const title = 'Reload'
 const subtitle = 'Reload Cerebro App'
 
 const onSelect = (event) => {
-  mainRpc.ipcSend('reload')
+  MainRpc.ipcSend('reload')
   window.location.reload()
   event.preventDefault()
 }

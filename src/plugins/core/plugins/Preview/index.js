@@ -34,12 +34,12 @@ class Preview extends Component {
   pluginAction(plugin, runningAction) {
     return () => {
       this.setState({ runningAction })
-      mainRpc.trackEvent({
+      MainRpc.trackEvent({
         category: 'Plugins',
         event: runningAction,
         label: plugin
       })
-      mainRpc.pluginClient[runningAction](plugin)
+      MainRpc.pluginClient[runningAction](plugin)
     }
   }
 

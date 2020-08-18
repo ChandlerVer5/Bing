@@ -6,7 +6,7 @@ export default class Settings extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      values: mainRpc.getConfig('plugins')[props.name] || {}
+      values: MainRpc.getConfig('plugins')[props.name] || {}
     }
     this.renderSetting = this.renderSetting.bind(this)
     this.changeSetting = this.changeSetting.bind(this)
@@ -19,8 +19,8 @@ export default class Settings extends Component {
     }
 
     this.setState({ values })
-    mainRpc.setConfig('plugins', {
-      ...mainRpc.getConfig('plugins'),
+    MainRpc.setConfig('plugins', {
+      ...MainRpc.getConfig('plugins'),
       [this.props.name]: values
     })
   }

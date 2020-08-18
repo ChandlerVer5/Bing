@@ -65,10 +65,10 @@ const KEYCODES = {
   123: 'F12'
 }
 
-const osKeyDelimiter = mainRpc.isMacOS() ? '' : '+'
+const osKeyDelimiter = MainRpc.isMacOS() ? '' : '+'
 
 const keyToSign = (key) => {
-  if (mainRpc.isMacOS()) {
+  if (MainRpc.isMacOS()) {
     return key
       .replace(/control/i, '⌃')
       .replace(/alt/i, '⌥')

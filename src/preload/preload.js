@@ -6,16 +6,18 @@ import { send, on, off } from '../common/rpc'
 
 const services = remote.getGlobal('services')
 
-console.log('preload.js loaded!')
+console.log('preload.js loaded!', services)
 
-window.upxRpc = {
+window.UpxRpc = {
   parseUpxJson: (pluginName) => services.parseUpxJson(pluginName),
   adaptPlugin: (upxName, pluginName) => services.adaptPlugin(upxName, pluginName),
   showUpx: (upxId) => services.showUpx(upxId),
-  sendUpxEvent: (name, type, data) => services.sendUpxEvent(name, type, data)
+  closeUpx: (upxId) => services.closeUpx(upxId),
+  sendUpxEvent: (name, type, data) => services.sendUpxEvent(name, type, data),
+  showUpxMenu: (upxId) => services.showUpxMenu(upxId)
 }
 
-window.mainRpc = {
+window.MainRpc = {
   remote,
   // cerebro need!
   child_exec: exec,
@@ -34,8 +36,7 @@ window.mainRpc = {
     getPluginsInDev: () => services.getPluginsInDev(), // 获取相应插件配置JSON
     install: (name) => (name ? services.externalPlugins[name] : services.externalPlugins),
     uninstall: (name) => services.removePlugin(name),
-    update: (name) => services.updatePlugin(name),
-    compileUpxPlugin: (name) => services.compileUpxPlugin(name)
+    update: (name) => services.updatePlugin(name)
   },
   getConfig: services.getConfig,
   setConfig: services.getConfig,

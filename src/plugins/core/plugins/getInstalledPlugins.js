@@ -1,7 +1,7 @@
 const readPackageJson = () =>
   new Promise((resolve, reject) => {
     try {
-      const json = mainRpc.pluginClient.pluginConfigs()
+      const json = MainRpc.pluginClient.pluginConfigs()
       resolve(json)
     } catch (error) {
       reject(error)

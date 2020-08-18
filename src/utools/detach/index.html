@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<style type="text/css">
+		body {
+			margin: 0;
+			font-family: system-ui;
+			user-select: none;
+			overflow: hidden;
+		}
+
+		header {
+			width: 100%;
+			height: 56px;
+			-webkit-app-region: drag;
+		}
+
+		.win32,
+		.linux,
+		.darwin {
+			width: 100%;
+			position: relative;
+		}
+
+		.title {
+			display: flex;
+			align-items: center;
+			font-size: 18px;
+		}
+
+		.win32 .title,
+		.linux .title {
+			float: left;
+			margin-left: 10px;
+		}
+
+		.darwin .title {
+			position: absolute;
+			left: 50%;
+			transform: translate(-50%);
+		}
+
+		.title img {
+			width: 26px;
+			height: 26px;
+			margin-right: 10px;
+			border-radius: 13px;
+		}
+
+		.title input {
+			background-color: #FFFFFF;
+			color: #333333;
+			width: 360px;
+			height: 30px;
+			line-height: 30px;
+			border-radius: 15px;
+			font-size: 12px;
+			border: none;
+			padding: 0 15px;
+			outline: none;
+		}
+
+		.title input::-webkit-input-placeholder {
+			color: #aaa;
+			user-select: none;
+		}
+
+		.handle {
+			float: right;
+			display: flex;
+			padding-top: 15px;
+			-webkit-app-region: no-drag;
+		}
+
+		.handle>div {
+			width: 26px;
+			height: 26px;
+			margin-right: 8px;
+			cursor: pointer;
+		}
+
+		.handle .devtool {
+			background: center / 18px no-repeat url("../assets/detach/devtool.svg")
+		}
+
+		.handle .settingmenu {
+			background: center / 18px no-repeat url("../assets/detach/setting.svg")
+		}
+
+		.handle .plugininfo {
+			background: center / 18px no-repeat url("../assets/detach/information.svg")
+		}
+
+		.handle .unpin {
+			background: center / 18px no-repeat url("../assets/detach/unpin.svg")
+		}
+
+		.handle .pin {
+			background: center / 18px no-repeat url("../assets/detach/pin.svg")
+		}
+
+		.handle .minimize {
+			background: center / 18px no-repeat url("../assets/detach/minimize.svg")
+		}
+
+		.handle .maximize {
+			background: center / 18px no-repeat url("../assets/detach/maximize.svg")
+		}
+
+		.handle .unmaximize {
+			background: center / 18px no-repeat url("../assets/detach/unmaximize.svg")
+		}
+
+		.handle .close {
+			background: center / 18px no-repeat url("../assets/detach/close.svg")
+		}
+
+		.dark-mode .title input {
+			background-color: #505050;
+			color: #F1F2F3;
+		}
+
+		.dark-mode .title input::-webkit-input-placeholder {
+			color: #999;
+		}
+
+		.dark-mode .handle .minimize {
+			background-image: url("../assets/detach/dark-minimize.svg")
+		}
+
+		.dark-mode .handle .maximize {
+			background-image: url("../assets/detach/dark-maximize.svg")
+		}
+
+		.dark-mode .handle .unmaximize {
+			background-image: url("../assets/detach/dark-unmaximize.svg")
+		}
+
+		.dark-mode .handle .close {
+			background-image: url("../res/detach/dark-close.svg")
+		}
+	</style>
+</head>
+
+<body>
+	<header>Error?Something went wrong! </header>
+</body>
+
+</html>

@@ -12,12 +12,13 @@ module.exports = merge(baseConfig, {
   entry: {
     // polyfills: ["@babel/polyfill", "event-source-polyfill"],
     // vendor: ['react', 'react-dom', 'prop-types'],
-    main: Conf.ENTRY
+    renderer: Conf.ENTRY,
+    detach: `${Conf.SRC}/utools/detach/index.js`
   },
   output: {
     path: Conf.OUTPUT,
-    publicPath: '/',
-    filename: 'renderer.bundle.js'
+    publicPath: '../', // detach chunk correct path!
+    filename: (chunkData) => (chunkData.chunk.name === 'detach' ? 'detach/[name].bundle.js' : '[name].bundle.js')
     // libraryTarget: 'umd'
   },
 
@@ -58,8 +59,17 @@ module.exports = merge(baseConfig, {
       title: 'cerebro',
       filename: 'index.html',
       template: `${Conf.SRC}/index.html`,
-      hash: true
+      hash: true,
+      chunks: ['renderer']
     }),
+    new HtmlWebpackPlugin({
+      title: 'cerebro',
+      filename: 'detach/index.html',
+      template: `${Conf.SRC}/utools/detach/index.html`,
+      hash: true,
+      chunks: ['detach']
+    }),
+
     new webpack.EnvironmentPlugin({
       NODE_ENV: JSON.stringify('development')
     }),

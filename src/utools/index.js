@@ -1,7 +1,7 @@
 import adaptPlugin from '@/utools/plugins/adapter'
-import { compileUpxPlugin } from './display'
-
-import { showUpx, parseUpxJson } from './base'
+import { parseUpxJson, showUpx, closeUpx } from '@/utools/plugins/base'
+import { showUpxMenu } from '@/utools/plugins/menu'
+import { sendUpxEvent } from '@/utools/api/execJs' // for UPX
 
 export const initUpxPlugins = () => {
   const { platform } = parseUpxJson()
@@ -12,4 +12,5 @@ export const initUpxPlugins = () => {
   // 启动插件时   从 config 中读取 相应的配置！比如自动分离
 }
 
-export { parseUpxJson, adaptPlugin, compileUpxPlugin, showUpx }
+// export api for preload.js
+export { parseUpxJson, adaptPlugin, showUpx, closeUpx, showUpxMenu, sendUpxEvent }

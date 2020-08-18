@@ -6,7 +6,7 @@ Most of the code source comes from [cerebro](https://github.com/KELiON/cerebro),
 
 Cerebro and [uTools](https://u.tools) plug-in system are integrated
 
-通过修改 cerebro, 1：完成自己想要的功能，2：移植 utools 插件！
+通过修改 cerebro, 1：完成自己想要的功能，2：移植 utools 插件！(Partial code From Utools)
 
 # TODO
 

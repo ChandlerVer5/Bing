@@ -11,7 +11,7 @@ import dragListener from 'drag-drop'
 import { WINDOW_WIDTH, INPUT_HEIGHT, RESULT_HEIGHT, MIN_VISIBLE_RESULTS } from '@/constants/ui'
 import * as searchActions from '@/renderer/actions/search'
 // for utools
-import IUtools from '@/utools/components'
+import IUtools from '@/utools/components/input'
 import upxWindowApi from '@/utools/api/web.api'
 
 import MainInput from '../MainInput'
@@ -29,8 +29,8 @@ const SELECT_EVENT = {
   event: 'select'
 }
 
-const trackShowWindow = () => mainRpc.trackEvent(SHOW_EVENT)
-const trackSelectItem = (label) => mainRpc.trackEvent({ ...SELECT_EVENT, label })
+const trackShowWindow = () => MainRpc.trackEvent(SHOW_EVENT)
+const trackSelectItem = (label) => MainRpc.trackEvent({ ...SELECT_EVENT, label })
 
 /**
  * Wrap click or mousedown event to custom `select-term` event,
@@ -76,10 +76,11 @@ const cursorInEndOfInut = ({ selectionStart, selectionEnd, value }) =>
 class Cerebro extends Component {
   constructor(props) {
     super(props)
-    this.mainWindow = mainRpc.currentWindow()
+    this.mainWindow = MainRpc.currentWindow()
     this.onWindowResize = debounce(this.onWindowResize, 100).bind(this)
     this.updateMainWindow = debounce(this.updateMainWindow, 16).bind(this)
 
+    this.clearBackToInitial = this.clearBackToInitial.bind(this)
     this.onMainInputFocus = this.onMainInputFocus.bind(this)
     this.onMainInputBlur = this.onMainInputBlur.bind(this)
 
@@ -205,7 +206,7 @@ class Cerebro extends Component {
         // Copy to clipboard on cmd+c
         const text = this.highlightedResult().clipboard
         if (text) {
-          mainRpc.copyToClipboard(text)
+          MainRpc.copyToClipboard(text)
           this.props.actions.reset()
           event.preventDefault()
         }
@@ -315,13 +316,15 @@ class Cerebro extends Component {
     trackSelectItem(term.plugin)
     const event = wrapEvent(realEvent)
     // if (!event.defaultPrevented) {
-    //   mainRpc.currentWindow().hide()
+    //   MainRpc.currentWindow().hide()
     // }
     term.onSelect(event) // from autocomplete
 
     if (term.upxId) {
       this.setState({ isUpx: true })
-      upxWindowApi()
+      upxWindowApi({
+        _restoreMain: this.clearBackToInitial
+      })
       this.cleanup()
     }
   }
@@ -336,7 +339,7 @@ class Cerebro extends Component {
 
   clearMainInput(event) {
     if (cursorInEndOfInut(event.target)) {
-      !event.target.value && mainRpc.currentWindow().hide()
+      !event.target.value && MainRpc.currentWindow().hide()
       this.mainInputRef.current.onInput(event, 0)
       this.props.actions.updateItem('')
       event.preventDefault()
@@ -358,7 +361,7 @@ class Cerebro extends Component {
     if (length === 0) {
       win.setMinimumSize(WINDOW_WIDTH, INPUT_HEIGHT)
       win.setSize(width, INPUT_HEIGHT)
-      win.setPosition(...mainRpc.getWinPosition({ width }))
+      win.setPosition(...MainRpc.getWinPosition({ width }))
       return
     }
 
@@ -367,7 +370,7 @@ class Cerebro extends Component {
     const minHeightWithResults = MIN_VISIBLE_RESULTS * RESULT_HEIGHT + INPUT_HEIGHT
     win.setMinimumSize(WINDOW_WIDTH, minHeightWithResults)
     win.setSize(width, heightWithResults)
-    win.setPosition(...mainRpc.getWinPosition({ width, heightWithResults }))
+    win.setPosition(...MainRpc.getWinPosition({ width, heightWithResults }))
   }
 
   /**
@@ -407,25 +410,46 @@ class Cerebro extends Component {
     return term
   }
 
+  // restore  from upx plugin view
+  clearBackToInitial() {
+    this.setState(
+      {
+        isUpx: false
+      },
+      () => {
+        this.focusMainInput()
+        this.props.actions.updateItem('')
+      }
+    )
+  }
+
   render() {
     const { isUpx, mainInputFocused, dragEnterStyle } = this.state
 
     return (
       <div className={styles.search}>
-        <div ref={this.inputWrapperRef} className={styles.inputWrapper} style={dragEnterStyle}>
-          {isUpx ? (
-            <IUtools term={this.props.term} feature={this.props.results[0]} selected={this.props.selected} />
-          ) : (
-            <MainInput
-              term={this.props.term}
-              ref={this.mainInputRef}
-              autoHolder={this.autocompleteValue()}
-              onChange={this.props.actions.updateItem}
-              onKeyDown={this.onKeyDown}
-              onFocus={this.onMainInputFocus}
-              onBlur={this.onMainInputBlur}
-            />
-          )}
+        {isUpx && (
+          <div ref={this.inputWrapperRef} className={styles.inputWrapper} style={dragEnterStyle}>
+            {isUpx && <IUtools term={this.props.term} feature={this.props.results[0]} selected={this.props.selected} restore={this.clearBackToInitial} />}
+          </div>
+        )}
+        <div
+          ref={this.inputWrapperRef}
+          className={styles.inputWrapper}
+          style={{
+            ...dragEnterStyle,
+            display: isUpx ? 'none' : 'block'
+          }}
+        >
+          <MainInput
+            term={this.props.term}
+            ref={this.mainInputRef}
+            autoHolder={this.autocompleteValue()}
+            onChange={this.props.actions.updateItem}
+            onKeyDown={this.onKeyDown}
+            onFocus={this.onMainInputFocus}
+            onBlur={this.onMainInputBlur}
+          />
         </div>
         {!isUpx && (
           <ResultsList

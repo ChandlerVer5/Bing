@@ -4,11 +4,11 @@ const baseConfig = require('./webpack.base.config')
 
 const env = process.env.NODE_ENV
 
-const prepload = (preloadName) =>
+const prepload = (name) =>
   merge(baseConfig, {
     mode: env,
     entry: {
-      [preloadName]: `${Conf.SRC}/preload/${preloadName}.js`
+      [name]: `${Conf.SRC}/preload/${name}.js`
     },
     output: {
       // publicPath: path.resolve(__dirname, 'app'),
@@ -19,4 +19,4 @@ const prepload = (preloadName) =>
     target: 'electron-preload'
   })
 
-module.exports = [prepload('preload'), prepload('upx')]
+module.exports = [prepload('preload'), prepload('utools'), prepload('detach')]

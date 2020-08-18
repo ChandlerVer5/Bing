@@ -6,11 +6,11 @@ const empty = () => Promise.reject()
 
 let getFileIcon = empty
 
-if (mainRpc.isMacOS()) {
+if (MainRpc.isMacOS()) {
   getFileIcon = require('./mac')
 }
 
-if (mainRpc.isWinOS()) {
+if (MainRpc.isWinOS()) {
   getFileIcon = require('./windows')
 }
 

@@ -2,6 +2,21 @@ import { getMainWindow, getWorkWebContentsBySender } from './helper'
 import execJs from './execJs'
 
 export default {
+  // for internal use only
+  _restoreMain: ({ upxId }) => {
+    const wcontents = getMainWindow().webContents
+    execJs(wcontents, `window.upxApi._restoreMain()`)
+  },
+  _clearInput: () => {
+    const wcontents = getMainWindow().webContents
+    execJs(wcontents, `window.upxApi._clearInput()`)
+  },
+  _focusInput: () => {
+    const wcontents = getMainWindow().webContents
+    execJs(wcontents, `window.upxApi._focusInput()`)
+  },
+
+  // for API
   hideMainWindow: (e, t) => {
     const i = this.mainWindow.getBrowserView()
     i && i.webContents === e.sender ? (this.hideMainWindow(t), (e.returnValue = !0)) : (e.returnValue = !1)
@@ -9,7 +24,7 @@ export default {
   showMainWindow: (e) => {
     const mainWin = getMainWindow()
     const bv = mainWin.getBrowserView()
-    bv && bv.webContents === e.sender ? (mainWin.isVisible() || this.display.trigger(!0), (e.returnValue = !0)) : (e.returnValue = !1)
+    bv && bv.webContents === e.sender ? (mainWin.isVisible() || this.display.trigger(true), (e.returnValue = true)) : (e.returnValue = false)
   },
   setExpendHeight: (e, t) => {
     // ;(t = 0 | parseInt(t)) < 1 && (t = 1)
@@ -18,16 +33,17 @@ export default {
     // const s = n.BrowserWindow.fromBrowserView(i)
     // if (!s) return void (e.returnValue = !1)
     // if (s === this.mainWindow) return this.setExpendHeight(t), void (e.returnValue = !0)
-    // const o = this.getPluginIdByWebContents(e.sender)
+    // const o = this.getUpxIdByWebContents(e.sender)
     // if (!o) return void (e.returnValue = !1)
     // const r = this.runningPluginPool[o]
     // r && r.detachWindows.includes(s) ? (s.setSize(s.getSize()[0], this.config.initHeight + t), (e.returnValue = !0)) : (e.returnValue = !1)
   },
+  // setSubInput(onChange, placeholder, isFocus)
   setSubInput: (e, { isFocus, placeholder }) => {
-    const bview = getWorkWebContentsBySender(e.sender)
-    if (bview) {
+    const bcontent = getWorkWebContentsBySender(e.sender)
+    if (bcontent) {
       execJs(
-        bview,
+        bcontent,
         `window.upxApi.setSubInput(${JSON.stringify({
           placeholder,
           isFocus
@@ -39,20 +55,21 @@ export default {
       e.returnValue = false
     }
   },
+  // removeSubInput()
   removeSubInput: (e) => {
-    const bview = getWorkWebContentsBySender(e.sender)
-    bview
-      ? execJs(bview, 'window.upxApi.removeSubInput()').then(() => {
+    const bcontent = getWorkWebContentsBySender(e.sender)
+    bcontent
+      ? execJs(bcontent, 'window.upxApi.removeSubInput()').then(() => {
           e.sender.focus()
           e.returnValue = true
         })
       : (e.returnValue = false)
   },
   setSubInputValue: (e, text) => {
-    const bview = getWorkWebContentsBySender(e.sender)
-    if (bview) {
+    const bcontent = getWorkWebContentsBySender(e.sender)
+    if (bcontent) {
       execJs(
-        bview,
+        bcontent,
         `window.upxApi.setSubInputValue(${JSON.stringify({
           value: String(text)
         })})`
@@ -94,13 +111,13 @@ export default {
     const i = n.BrowserWindow.fromBrowserView(t)
     if (!i) return void (e.returnValue = !1)
     if (i === this.mainWindow) return this.outPlugin(), void (e.returnValue = !0)
-    const s = this.getPluginIdByWebContents(e.sender)
+    const s = this.getUpxIdByWebContents(e.sender)
     if (!s) return void (e.returnValue = !1)
     const o = this.runningPluginPool[s]
     o && o.detachWindows.includes(i) ? (i.close(), (e.returnValue = !0)) : (e.returnValue = !1)
   },
   createBrowserWindow: (e, { url: t, options: i }) => {
-    const n = this.getPluginIdByWebContents(e.sender)
+    const n = this.getUpxIdByWebContents(e.sender)
     if (n)
       try {
         e.returnValue = this.pluginAPICreateBrowserWindow(n, t, i)

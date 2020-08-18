@@ -1,11 +1,29 @@
-$iconWith: 40px;
+$iconWith: 44px;
+
+/* utools */
+
+.tag {
+  // padding: 0 10px;
+  // border-radius: 400px;
+  position: absolute;
+  top: 10px;
+  // background-color: rgb(224, 224, 224);
+  height: calc(var(--main-input-height) - 20px);
+  width: 38px;
+  // font-size: 22px;
+  cursor: pointer;
+
+  img {
+    max-width: calc(var(--main-input-height) - 18px);
+  }
+}
 
 .subInput {
   height: var(--main-input-height);
   line-height: var(--main-input-height);
   color: var(--main-font-color);
   font-family: var(--main-font);
-  font-size: 1.4em;
+  font-size: 1.3em;
   border: none;
   outline: none;
   box-sizing: border-box;
@@ -15,7 +33,7 @@ $iconWith: 40px;
   -webkit-app-region: no-drag;
   user-select: none;
   position: relative;
-  left: #{$iconWith};
+  margin-left: #{$iconWith};
   z-index: 1;
   &::-webkit-input-placeholder {
     color: #aaa;
@@ -30,10 +48,4 @@ $iconWith: 40px;
   left: calc(#{$iconWith} + 12px);
   z-index: 2;
   width: 100vw;
-}
-
-.autoHolder {
-  top: calc(-1 * var(--main-input-height));
-  z-index: 0;
-  color: #aaa;
 }

@@ -10,7 +10,7 @@ const getAvailablePlugins = memoize(availablePlugins, { maxAge })
 const parseVersion = (version) => semver.valid((version || '').replace(/^\^/, '')) || '0.0.0'
 
 export default () =>
-  Promise.all([getAvailablePlugins(), getInstalledPlugins(), mainRpc.pluginClient.getPluginsInDev()]).then(([available, installed, debuggingPlugins]) => {
+  Promise.all([getAvailablePlugins(), getInstalledPlugins(), MainRpc.pluginClient.getPluginsInDev()]).then(([available, installed, debuggingPlugins]) => {
     const listOfAvailablePlugins = available.map((plugin) => {
       const installedVersion = parseVersion(installed[plugin.name])
       const isInstalled = !!installed[plugin.name]
