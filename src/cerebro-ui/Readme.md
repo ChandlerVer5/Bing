@@ -15,7 +15,7 @@ This component used to build lists with keyboard navigation:
 - <kbd>←</kbd> and <kbd>esc</kbd> used to move selection back to main results list;
 
 ```
-import { KeyboardNav, KeyboardNavItem } from '@/cerebro-ui'
+import { KeyboardNav, KeyboardNavItem } from 'cerebro-ui'
 
 const Preview = ({ items, onSelect }) => (
   <KeyboardNav>
@@ -38,7 +38,7 @@ const Preview = ({ items, onSelect }) => (
 For consistence, it is recommended to use one loading spinner component in all plugins:
 
 ```
-import { Loading } from '@/cerebro-ui'
+import { Loading } from 'cerebro-ui'
 
 const Preview = ({ isLoading }) => (
   isLoading ? <Loading /> : <MyPluginPreview />
@@ -51,7 +51,7 @@ const Preview = ({ isLoading }) => (
 In most cases `<Loading />` component is displayed until some promise resolved/rejected. In this case to simplify component code and remove unnecessary `state` with loading/loaded flags, `<Preload />` component could be used:
 
 ```
-import { Preload, Loading } from '@/cerebro-ui'
+import { Preload, Loading } from 'cerebro-ui'
 
 const Preview = (promise) => (
   <Preload promise={promise} loader=>{Loading}>
@@ -64,7 +64,7 @@ const Preview = (promise) => (
 ### Form elements
 
 ```
-import { Button, Checkbox, Select, Text } from '@/cerebro-ui/Form'
+import { Button, Checkbox, Select, Text } from 'cerebro-ui/Form'
 ```
 
 ## Related

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { KeyboardNav, KeyboardNavItem, Preload } from '@/cerebro-ui'
+import { KeyboardNav, KeyboardNavItem, Preload } from 'cerebro-ui'
 // import ReactMarkdown from 'react-markdown'   // FIXME require ??~
 import plugins from '@/plugins'
 import ActionButton from './ActionButton'

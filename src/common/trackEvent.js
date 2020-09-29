@@ -1,11 +1,11 @@
 // import ua from 'universal-analytics'
 // import { machineIdSync } from 'node-machine-id';
 // import { version as appVersion } from '../../package.json'
-import config from './app-settings'
+import { get } from './app-configs'
 
 const DEFAULT_CATEGORY = 'Cerebro App'
 
-const isTrackingEnabled = () => process.env.NODE_ENV === 'production' && config.get('trackingEnabled')
+const isTrackingEnabled = () => process.env.NODE_ENV === 'production' && get('trackingEnabled')
 
 let visitorCache = null
 

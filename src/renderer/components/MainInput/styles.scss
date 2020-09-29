@@ -1,5 +1,5 @@
 .mainInput {
-  // width: 100vw;
+  width: 100%;
   height: var(--main-input-height);
   line-height: var(--main-input-height);
   color: var(--main-font-color);
@@ -12,7 +12,6 @@
   white-space: nowrap;
   /* cursor: default; */
   -webkit-app-region: no-drag;
-  -webkit-user-select: none;
   user-select: none;
   position: relative;
   z-index: 1;
@@ -25,6 +24,8 @@
 .drag_layer {
   position: absolute;
   top: 0;
+  -webkit-app-region: drag;
+  user-select: none;
   height: var(--main-input-height);
   left: 14px;
   z-index: 2;

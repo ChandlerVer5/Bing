@@ -5,7 +5,7 @@ import { sendUpxEvent } from '@/utools/api/execJs' // for UPX
 
 export const initUpxPlugins = () => {
   const { platform } = parseUpxJson()
-  if (!platform.includes(global.platform.os)) {
+  if (!platform.includes(process.platform)) {
     console.log('当前插件不支持该平台!')
     return
   }

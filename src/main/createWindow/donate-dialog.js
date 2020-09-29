@@ -1,5 +1,5 @@
 import { dialog, shell } from 'electron'
-import config from '../../common/app-settings'
+import { get, set } from '../../common/app-configs'
 import { trackEvent } from '../../common/trackEvent'
 
 const now = () => new Date().getTime()
@@ -12,22 +12,22 @@ const buttons = [['Close', 'Make them happy']]
 const skipMessages = ["I don't want to see this message again"]
 
 export const donate = () => {
-  config.set('skipDonateDialog', true)
+  set('skipDonateDialog', true)
   shell.openExternal('https://cerebroapp.com/#donate')
 }
 
 export const shouldShow = () => {
-  if (config.get('firstStart') || config.get('skipDonateDialog')) {
+  if (get('firstStart') || get('skipDonateDialog')) {
     // Do not show donate dialog on first start or when "dont show this message" were chosen
     return false
   }
-  const lastShow = config.get('lastShownDonateDialog')
+  const lastShow = get('lastShownDonateDialog')
   // Show on second start and once per week after first start
   return !lastShow || twoWeeksAgo() >= lastShow
 }
 
 export const show = () => {
-  config.set('lastShownDonateDialog', now())
+  set('lastShownDonateDialog', now())
   const AB = Math.floor(Math.random() * buttons.length)
   const track = (event) => {
     trackEvent({
@@ -51,7 +51,7 @@ export const show = () => {
 
   const callback = (id, checkboxChecked) => {
     if (checkboxChecked) {
-      config.set('skipDonateDialog', true)
+      set('skipDonateDialog', true)
       track('skip-dialog')
     }
     if (id === 1) {

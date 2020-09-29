@@ -1,12 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
+import execJS from '../api/execJs'
 import styles from './input.scss'
-
-// 拖动移动三兄弟
-function windowMove(canMove) {
-  return MainRpc.rendererSend('window-move-open', canMove)
-}
-
-const onMouseDown = (e) => windowMove(true)
 
 const getTextWidth = (el, value) => {
   // uses a cached canvas if available
@@ -27,6 +21,7 @@ const UpxInput = (props) => {
   const { term, selected, feature } = props
 
   const [inputValue, setInputValue] = useState('')
+  let [showUpxName, setUpxName] = useState(false)
 
   /**
    * Handle keyboard shortcuts
@@ -61,12 +56,19 @@ const UpxInput = (props) => {
   const clearInput = () => {
     setInputValue('')
   }
-  const focusInput = () => {
-    subInputRef.current.focus()
+  const setDragLayer = (width = 0) => (dragLayerRef.current.style.left = `${width + 54}px`)
+
+  const toggleUpxName = (bool = false) => {
+    subInputRef.current.style.display = bool ? 'none' : 'block'
+    setUpxName(bool)
+    bool && setDragLayer()
   }
 
-  const onMouseUp = (e) => {
-    windowMove(false)
+  const focusInput = (bool = true) => {
+    subInputRef.current[bool ? 'focus' : 'blur']()
+  }
+
+  const onDragClick = (e) => {
     focusInput()
   }
 
@@ -86,30 +88,36 @@ const UpxInput = (props) => {
   const onValueChange = (e, txt) => {
     const width = txt === 0 ? txt : Math.floor(getTextWidth(subInputRef.current, txt))
     const inputText = txt || subInputRef.current.value
-    dragLayerRef.current.style.left = `${width + 58}px`
+    setDragLayer(width)
     inputText && window.UpxRpc.sendUpxEvent(feature.upxId, 'input', inputText)
     setInputValue(inputText)
   }
 
   useEffect(() => {
     console.log(dragLayerRef, props)
-
     window.addEventListener('keydown', onDocumentKeydown)
 
     window.upxApi.setSubInput = ({ placeholder, isFocus }) => {
+      toggleUpxName(false)
       isFocus ? focusInput() : subInputRef.current.blur()
       if (placeholder) {
         clearInput()
-        dragLayerRef.current.style.left = `58px`
+        setDragLayer()
         subInputRef.current.setAttribute('placeholder', placeholder)
       }
     }
+
     window.upxApi.setSubInputValue = ({ value }) => {
+      toggleUpxName(false)
       onValueChange(null, value)
     }
+    window.upxApi.subInputSelect = () => subInputRef.current.select()
 
-    window.upxApi._clearInput = () => clearInput()
-    window.upxApi._focusInput = () => focusInput()
+    window.upxApi.removeSubInput = () => {
+      toggleUpxName(true)
+    }
+    window.upxApi.subInputFocus = () => focusInput()
+    window.upxApi.subInputBlur = () => focusInput(false)
 
     return () => {
       // unmount will do!
@@ -120,7 +128,6 @@ const UpxInput = (props) => {
 
   // menu!
   const showMenu = (e) => {
-    console.log(e, props)
     UpxRpc.showUpxMenu(feature.upxId)
   }
 
@@ -128,12 +135,14 @@ const UpxInput = (props) => {
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <>
       <div className={styles.tag} onClick={showMenu}>
-        {/* <img className={styles.tag} src={feature.icon} alt="" /> */}
-        <img src="https://www.easyicon.net/api/resizeApi.php?id=1266721&size=128" alt="" />
+        <img src={feature.icon} alt={feature.title} />
       </div>
       <input ref={subInputRef} value={inputValue} onChange={onValueChange} onKeyDown={onKeyDown} type="text" id="main-input" className={styles.subInput} />
-      <div ref={dragLayerRef} onMouseDown={onMouseDown} onMouseUp={onMouseUp} className={styles.drag_layer} />
-      {/* </div> */}
+      <div ref={dragLayerRef} onClick={onDragClick} className={styles.drag_layer}>
+        <span style={{ display: showUpxName ? 'block' : 'none' }} className={[styles.name, 'no-select'].join(' ')}>
+          {feature.upxName}
+        </span>
+      </div>
     </>
   )
 }

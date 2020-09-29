@@ -7,7 +7,6 @@ export function toggleWin(appWindow) {
   if (appWindow.isVisible()) {
     appWindow.hide()
   } else {
-    appWindow.setSkipTaskbar(true)
     appWindow.show()
     appWindow.focus()
   }

@@ -10,7 +10,7 @@
 
 .markdown {
   min-width: 100%;
-  font-size: .8em;
+  font-size: 0.8em;
   align-self: flex-start;
   font-size: 16px;
   padding: 10px;
@@ -18,7 +18,10 @@
     font-size: 1em;
     margin: 0 0 10px;
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     color: var(--main-font-color);
     margin-top: 24px;
     margin-bottom: 16px;
@@ -46,7 +49,8 @@
     code {
       padding: 0;
       background: transparent;
-      &:before, &:after {
+      &:before,
+      &:after {
         content: none;
       }
     }
@@ -65,15 +69,15 @@
     padding-bottom: 0.2em;
     margin: 0;
     font-size: 85%;
-    background-color: rgba(0,0,0,0.04);
+    background-color: rgba(0, 0, 0, 0.04);
     border-radius: 3px;
     &:after {
       letter-spacing: -0.2em;
-      content: "\00a0";
+      content: '\00a0';
     }
     &:before {
       letter-spacing: -0.2em;
-      content: "\00a0";
+      content: '\00a0';
     }
   }
   img {

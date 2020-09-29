@@ -6,14 +6,16 @@ const toString = (plugin) => plugin.keyword
 const notMatch = (term) => (plugin) => plugin.keyword !== term && plugin.keyword !== term
 
 const pluginToResult = (actions) => (res) => ({
-  upxFile: res.upxFile, // TODO need+
-  // plugin: res.upxFile, // TODO selected Plugin name
   upxId: res.upxId, // flag for utools's plugin,is upx' name
+  upxFile: res.upxFile,
+  // plugin: res.upxFile, // TODO selected Plugin name
+  upxName: res.pluginName,
+  featureIndex: res.featureIndex,
   title: res.name, // upx'json code
   icon: res.icon,
   term: `${res.keyword} `, // upx'json one of cmds
   onSelect: (event) => {
-    res.upxId && window.UpxRpc.showUpx(res.upxId, res.name)
+    res.upxId && window.UpxRpc.showUpx(res.upxId, res.featureIndex)
     event.preventDefault()
     actions.replaceTerm(`${res.keyword} `)
   }

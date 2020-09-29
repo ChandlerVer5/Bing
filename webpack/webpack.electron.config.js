@@ -3,6 +3,7 @@
 const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 // const baseConfig = require('./webpack.base.config')
+// const { ExternalsPlugin } = require('webpack')
 const Conf = require('./config')
 
 module.exports = {

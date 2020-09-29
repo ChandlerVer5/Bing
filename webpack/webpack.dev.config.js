@@ -95,7 +95,6 @@ module.exports = merge(baseConfig, {
     contentBase: Conf.OUTPUT,
     disableHostCheck: true,
     writeToDisk: true,
-
     /*     stats: {
       colors: true,
       chunks: false,
@@ -104,14 +103,18 @@ module.exports = merge(baseConfig, {
 
     before() {
       console.log('Starting Main Process...')
-      spawn('npm', ['run', 'start-electron'], {
-        // 在运行这个 server 之前会运行 package.json 里的`start-electron`指令
-        shell: true,
-        env: process.env,
-        stdio: 'inherit'
-      })
-        .on('close', (code) => process.exit(code))
-        .on('error', (spawnError) => console.error(spawnError))
+
+      // 不加入延迟，mac下会出现 plugin 的 index 还未生成，而该命令已经打开，导致不显示  index.html ！
+      setTimeout(() => {
+        spawn('npm', ['run', 'start-electron'], {
+          // 在运行这个 server 之前会运行 package.json 里的`start-electron`指令
+          shell: true,
+          env: process.env,
+          stdio: 'inherit'
+        })
+          .on('close', (code) => process.exit(code))
+          .on('error', (spawnError) => console.error(spawnError))
+      }, 1000)
 
       /* spawn('electron', ['main/index.js'], {
         shell: true,

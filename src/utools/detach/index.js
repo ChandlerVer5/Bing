@@ -22,8 +22,9 @@ function initSubInputEvent() {
     subInputDelayTimers = setTimeout(() => {
       subInputDelayTimers = null
       window.DetachRpc.sendSubInputChangeEvent(value)
-    }, 50)
+    }, 60)
   }
+
   let inputLock = false
   inputDom.addEventListener('compositionstart', () => {
     inputLock = true
@@ -157,7 +158,7 @@ window.handle = {
   showInfoMenu: window.DetachRpc.buildDetachPluginInfoMenu
 }
 
-window.api = {
+window.upxApi = {
   setSubInput: (subInput) => {
     const titleDom = document.querySelector('.title')
     if (!titleDom) return
@@ -175,6 +176,7 @@ window.api = {
     titleDom.outerHTML = `<div class='title' style='padding-top:15px;'><img alt='' src='${window.payload.icon}'>${window.payload.label}</div>`
   },
   setSubInputValue: ({ value }) => {
+    console.log('setSubInputValue', value)
     const inputDom = document.querySelector('input')
     if (!inputDom) return
     inputDom.value = value

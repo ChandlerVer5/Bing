@@ -4,9 +4,8 @@
 
 :root {
   /* refs constants/ui.js */
-  --main-input-height: calc(56px - var(--main-border-width) * 2);
   --main-result-height: 48px;
-  --main-border-width: 2px;
+  --main-input-height: calc(56px - var(--main-border-width) * 2);
   /* scrollbar */
   ::-webkit-scrollbar-track-piece {
     background-color: #fff;
@@ -56,6 +55,10 @@ html {
   left: 0;
   /* 窗口边框设置 */
   height: 100vh;
-  border: 2px solid #cecece;
+  border: var(--main-border-width) solid #cecece;
   overflow: hidden;
+}
+
+:global(.no-select) {
+  user-select: none;
 }

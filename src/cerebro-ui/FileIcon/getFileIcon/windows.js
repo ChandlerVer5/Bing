@@ -1,3 +1,5 @@
+const { remote } = require('electron')
+
 /**
  * Get system icon for file
  *
@@ -5,10 +7,10 @@
  * @return {Promise<String>} Promise resolves base64-encoded source of icon
  */
 module.exports = function getFileIcon(path) {
-  return new Promise((resolve, reject) => {
-    MainRpc.remote.app.getFileIcon(path, (err, icon) => {
+  return new Promise((accept, reject) => {
+    remote.app.getFileIcon(path, (err, icon) => {
       if (err) return reject(err)
-      resolve(icon.toDataURL())
+      accept(icon.toDataURL())
     })
   })
 }

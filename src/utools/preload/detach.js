@@ -22,6 +22,7 @@ window.DetachRpc = {
   },
   minimizeWindow: () => {
     const currentWindow = remote.getCurrentWindow()
+    console.log(currentWindow.webContents)
     currentWindow.blur()
     currentWindow.minimize()
   },

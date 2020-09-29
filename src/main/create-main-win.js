@@ -1,10 +1,11 @@
-import { BrowserWindow, globalShortcut, app, screen, shell } from 'electron'
+import { BrowserWindow, ipcMain, globalShortcut, app, screen, shell, protocol } from 'electron'
 
 import debounce from 'lodash/debounce'
 import EventEmitter from 'events'
 import path from 'path'
+import initService from '@/common/services'
 
-import { INPUT_HEIGHT, WINDOW_WIDTH } from '../constants/ui'
+import { INPUT_HEIGHT, WINDOW_WIDTH, BORDER_WIDTH } from '../constants/ui'
 
 import { toggleWin } from './createWindow/win-util'
 import handleUrl from './createWindow/handle-url'
@@ -26,6 +27,7 @@ export default ({ configs, src, isDev, getWinPosition }) => {
     frame: false,
     resizable: false,
     transparent: false,
+    fullscreen: false,
     // acceptFirstMouse: true,
     // 移除窗口的阴影和动画，否则看起来卡顿一样~
     thickFrame: false,
@@ -51,18 +53,41 @@ export default ({ configs, src, isDev, getWinPosition }) => {
   }
 
   const mainWindow = new BrowserWindow(mainWinOptions)
-
   // Float main window above full-screen apps
   mainWindow.setAlwaysOnTop(true, 'modal-panel')
+  mainWindow.setSkipTaskbar(true)
+  mainWindow.removeMenu()
+  mainWindow.setVisibleOnAllWorkspaces(true)
 
   mainWindow.loadURL(src)
   mainWindow.settingsChanges = new EventEmitter()
+
+  mainWindow.webContents.on('dom-ready', () => {
+    mainWindow.webContents.insertCSS(`:root { --main-border-width:${BORDER_WIDTH}px;}`)
+
+    // for local file:///
+    protocol.interceptFileProtocol(
+      'file',
+      (req, callback) => {
+        const url = req.url.substr(8)
+        callback(decodeURI(url))
+      },
+      (error) => {
+        if (error) {
+          console.error('Failed to register protocol')
+        }
+      }
+    )
+  })
 
   // 打开控制台调试工具
   // if (isDev())
   mainWindow.webContents.openDevTools({
     mode: 'detach'
   })
+
+  ipcMain.emit('APP_READY', { mainWinId: mainWindow.id })
+  initService()
 
   // Get global shortcut from app settings
   let shortcut = configs.get('hotkey')
@@ -72,6 +97,19 @@ export default ({ configs, src, isDev, getWinPosition }) => {
 
   // Setup event listeners for main window
   globalShortcut.register(shortcut, toggleMainWindow)
+
+  globalShortcut.register('F11', (e) => {
+    console.log('F11 get!!')
+  })
+
+  /* 
+  app.on('will-quit', () => {
+    // Unregister a shortcut.
+    globalShortcut.unregister('CommandOrControl+X')
+
+    // Unregister all shortcuts.
+    globalShortcut.unregisterAll()
+  }) */
 
   /*  mainWindow.on('blur', () => {
     if (!isDev()) {

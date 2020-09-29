@@ -32,15 +32,20 @@ class MainInput extends Component {
   }
 
   onInput = (e, txt) => {
-    const { value, onChange } = this.props
-    const width = txt === 0 ? txt : Math.floor(this.getTextWidth(e.target, txt))
-    // add 10 px to pad the input.
+    // const { value, onChange } = this.props
+    let width = 0
+    if (txt === 0) {
+      width = '14px'
+    } else {
+      width = `${Math.floor(this.getTextWidth(e.target, txt)) + 14}px`
+      // add 10 px to pad the input.
 
-    this.dragLayerRef.current.style.left = `${width + 14}px`
-    this.autoTextRef.current.scrollLeft = this.inputRef.current.scrollLeft
-    setTimeout(() => {
-      this.inputRef.current && (this.inputRef.current.scrollLeft = width)
-    }, 500)
+      this.autoTextRef.current.scrollLeft = this.inputRef.current.scrollLeft
+      /* setTimeout(() => {
+        this.inputRef.current && (this.inputRef.current.scrollLeft = width)
+      }, 500) */
+    }
+    this.dragLayerRef.current.style.left = width
   }
 
   handleOnScroll = (e) => {
@@ -48,19 +53,26 @@ class MainInput extends Component {
     this.autoTextRef.current.scrollLeft = e.target.scrollLeft
   }
 
-  onMouseDown = (e) => {
-    this.windowMove(true)
+  onDragClick = (e) => {
+    this.inputRef.current.focus()
+    console.log(this.inputRef.current)
   }
 
-  onMouseUp = (e) => {
+  /*   
+  // 拖动移动三兄弟
+
+   onMouseDown = (e) => {
+    this.inputRef.current.focus()
+    console.log(this.inputRef.current)
+  }
+   onMouseUp = (e) => {
     this.focus()
     this.windowMove(false)
   }
 
-  // 拖动移动三兄弟
   windowMove(canMove) {
     return MainRpc.rendererSend('window-move-open', canMove)
-  }
+  } */
 
   render() {
     const { term, autoHolder } = this.props
@@ -82,7 +94,7 @@ class MainInput extends Component {
           onScroll={this.handleOnScroll}
         />
         <input disabled type="text" ref={this.autoTextRef} className={`${styles.mainInput} ${styles.autoHolder}`} value={autoHolder} />
-        <div ref={this.dragLayerRef} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} className={styles.drag_layer} />
+        <div ref={this.dragLayerRef} onClick={this.onDragClick} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} className={styles.drag_layer} />
       </>
     )
   }

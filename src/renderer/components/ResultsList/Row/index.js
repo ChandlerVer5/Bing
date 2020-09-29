@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { SmartIcon } from '@/cerebro-ui'
+import { SmartIcon } from 'cerebro-ui'
 import styles from './styles.scss'
 
 class Row extends Component {

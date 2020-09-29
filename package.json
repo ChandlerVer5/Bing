@@ -1,38 +1,38 @@
 {
-  "name": "MyBing",
+  "name": "Bing",
   "version": "0.4.0",
   "productName": "MyBing",
   "description": "Extendable electron-based open-source Spotlight and Alfred analogue",
-  "author": "YoFoon",
   "license": "MIT",
   "engines": {
     "node": ">=12.0.0"
   },
   "main": "./webpack/main.dev.js",
   "scripts": {
+    "postinstall": "electron-rebuild -f -w pouchdb",
     "test": "npm run lint-render && npm run lint-main",
     "lint-render": "eslint src *.js",
     "lint-main": "eslint main *.js",
     "lint": "eslint 'src/**/*.{js,jsx}' --fix",
     "format": "prettier --write 'src/**/*.{js,jsx,css,scss}'",
-    "clear": "rm -rf ./app/* && rm -rf ./dist/* && cp ./src/main/package.json ./app/",
-    "start": "cross-env NODE_ENV=development webpack-dev-server --hot --config=./webpack/webpack.dev.config.js",
+    "clear": "rm -rf ./app/* && rm -rf ./dist/* ",
+    "start": "npm run clear && cross-env NODE_ENV=development webpack-dev-server --hot --config=./webpack/webpack.dev.config.js",
     "start-electron": "npm run build-preload && cross-env NODE_ENV=development nodemon -e js --watch ./src/main --watch ./src/utools --watch ./src/common --exec electron .",
     "build-preload": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.preload.config.js --progress --profile --colors",
     "build-main": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.electron.config.js --progress --profile --colors",
     "pack": "build --dir",
-    "compile": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.pro.config.js",
+    "prod": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.pro.config.js",
     "electron": "cross-env NODE_ENV=production electron app/main.js",
-    "build": "npm run clear && npm run compile && npm run electron",
-    "package": "npm run build && npm run pack",
+    "build": "npm run clear && npm run prod && cp ./src/package.json ./app/",
+    "package": "npm run build && npm run builder",
     "mac": "npm run build && electron-builder --mac --x64",
     "win": "npm run build && electron-builder --win --x64 --ia32",
     "linux": "npm run build && electron-builder --linux",
     "builder": "npm run build &&  electron-builder --mac --x64 && electron-builder --win --x64 --ia32"
   },
   "build": {
-    "appId": "com.chandlerver5.www",
-    "productName": "MyBing",
+    "appId": "com.chandlerver5.bing",
+    "productName": "Bing",
     "directories": {
       "output": "dist"
     },
@@ -95,16 +95,27 @@
   "pre-commit": [
     "test"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChandlerVer5/bing.git"
+  },
+  "author": {
+    "name": "ChandlerVer5",
+    "email": "ChandlerVer5@gmail.com",
+    "url": "https://github.com/ChandlerVer5"
+  },
   "dependencies": {
-    "asar-require-auto": "^1.2.4",
+    "@babel/runtime": "^7.11.2",
+    "asar": "^3.0.3",
     "auto-launch": "^5.0.5",
-    "cerebro-tools": "file:../cerebro/cerebro-tools",
+    "cerebro-tools": "^0.1.8",
+    "cerebro-ui": "file:src/cerebro-ui",
     "core-js": "^3.6.5",
     "drag-drop": "^6.0.2",
     "escape-string-regexp": "^4.0.0",
     "lodash": "^4.17.19",
     "mv": "^2.1.1",
-    "nodemon": "^2.0.4",
+    "pouchdb": "^7.2.1",
     "prop-types": "^15.7.2",
     "rc-virtual-list": "^1.1.6",
     "react": "^16.13.1",
@@ -123,6 +134,7 @@
   "devDependencies": {
     "@babel/cli": "^7.10.5",
     "@babel/core": "^7.10.5",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/plugin-proposal-decorators": "^7.10.5",
     "@babel/plugin-transform-runtime": "^7.10.5",
     "@babel/polyfill": "^7.10.4",
@@ -137,7 +149,8 @@
     "cross-env": "^7.0.2",
     "css-loader": "^4.0.0",
     "electron": "^9.1.1",
-    "electron-builder": "^22.7.0",
+    "electron-builder": "^22.8.0",
+    "electron-rebuild": "^2.0.0",
     "electron-updater": "^4.3.1",
     "eslint": "^7.5.0",
     "eslint-config-airbnb": "^18.2.0",
@@ -155,6 +168,7 @@
     "lint-staged": "^10.2.11",
     "lodash-webpack-plugin": "^0.11.5",
     "node-sass": "^4.14.1",
+    "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
     "pretty-quick": "^2.0.1",
     "regenerator-runtime": "^0.13.7",
@@ -166,7 +180,8 @@
     "webpack": "^4.44.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^5.0.9"
+    "webpack-merge": "^5.0.9",
+    "webpack-node-externals": "^2.5.1"
   },
   "husky": {
     "hooks": {

@@ -1,28 +1,57 @@
+/* eslint-disable import/exports-last */
 import { ipcMain, ipcRenderer } from 'electron'
 import baseAPI from './base'
 import appAPI from './app'
+import detachAPI from './detach'
+import dbAPI from './db'
 
-const UPX_BASE_CHANNEL = 'api.base'
-const UPX_APP_CHANNEL = 'api.app'
+export const UPX_BASE_CHANNEL = 'upx.base'
+export const UPX_DB_CHANNEL = 'upx.db'
+export const UPX_APP_CHANNEL = 'upx.app'
+export const UPX_DETACH_CHANNEL = 'detach.handle'
+
+const API = {
+  [UPX_BASE_CHANNEL]: baseAPI,
+  [UPX_DB_CHANNEL]: dbAPI,
+  [UPX_APP_CHANNEL]: appAPI,
+  [UPX_DETACH_CHANNEL]: detachAPI
+}
 
 export const sendMainSync = (funcName, args) => ipcMain.emit(UPX_BASE_CHANNEL, funcName, args)
-export const sendBaseSync = (funcName, args) => ipcRenderer.sendSync(UPX_BASE_CHANNEL, funcName, args)
-export const sendBase = (funcName, args) => ipcRenderer.send(UPX_BASE_CHANNEL, funcName, args)
-export const sendAppSync = (funcName, args) => ipcRenderer.sendSync(UPX_APP_CHANNEL, funcName, args)
-export const sendApp = (funcName, args) => ipcRenderer.send(UPX_APP_CHANNEL, funcName, args)
+export const sendSync = (channel, funcName, args) => ipcRenderer.sendSync(channel, funcName, args)
+export const send = (channel, funcName, args) => ipcRenderer.send(channel, funcName, args)
+export const sendApp = (channel, funcName, args) => ipcRenderer.send(channel, funcName, args)
+export const sendAppSync = (channel, funcName, args) => ipcRenderer.send(channel, funcName, args)
 
-export const upxApiOn = () => {
-  ipcMain.on(UPX_BASE_CHANNEL, (event, funcName, args) => {
-    if (!args) {
-      baseAPI[event](funcName)
-      return
-    }
+// const listener = (channel) => (event, funcName, args) => {}
 
-    if (funcName in baseAPI) {
-      event.returnValue = baseAPI[funcName](event, args)
-    } else {
-      event.returnValue = null
-    }
+export const upxApiRegister = () => {
+  Object.keys(API).forEach((channel) => {
+    ipcMain.on(channel, async (event, funcName, args) => {
+      if (!event.sender) {
+        API[channel][event](funcName)
+        return
+      }
+
+      console.log(channel, funcName, event.returnValue)
+      if (funcName in API[channel]) {
+        // const { upxId } = event.sender
+        if (channel === UPX_DB_CHANNEL) {
+          event.returnValue = await API[channel][funcName](event, args)
+          console.log(channel + funcName, event.returnValue)
+        } else {
+          event.returnValue = API[channel][funcName](event, args)
+        }
+      } else {
+        event.returnValue = null
+      }
+    })
+  })
+}
+
+export const upxApiUnregister = () => {
+  Object.keys(API).forEach((channel) => {
+    ipcMain.off(channel, listener(channel))
   })
 }
 

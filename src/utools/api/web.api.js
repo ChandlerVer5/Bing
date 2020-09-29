@@ -6,3 +6,7 @@ export default function upxWindowApi(registerData = {}) {
   window.upxApi = Object.assign((window.upxApi = {}), registerData)
   console.log('upxApi', window.upxApi)
 }
+
+// export function dispatchEvent () {
+
+// }

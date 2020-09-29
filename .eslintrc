@@ -33,6 +33,7 @@
   "plugins": ["react", "prettier"],
   "rules": {
     "quotes": "warn",
+    "function-paren-newline": "off",
     "no-unexpected-multiline": "off",
     "no-param-reassign": "off",
     "no-invalid-this": "off",

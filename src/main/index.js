@@ -2,9 +2,7 @@
 import { app, ipcMain, crashReporter } from 'electron'
 import path from 'path'
 
-import registerService from '@/common/services'
-
-import configs from '@/common/app-settings'
+import * as configs from '@/common/app-configs'
 import windowMove from '@/common/windowMove'
 import { trackEvent, screenView } from '@/common/trackEvent'
 import getWinPosition from '@/common/get-win-position'
@@ -65,9 +63,6 @@ app.whenReady().then(() => {
     // Main window html
     src: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : `file://${path.join(__dirname, '/index.html')}`
   })
-
-  ipcMain.emit('APP_READY', { mainWinId: mainWindow.id })
-  registerService()
 
   // ---Track app start event---
   trackEvent({

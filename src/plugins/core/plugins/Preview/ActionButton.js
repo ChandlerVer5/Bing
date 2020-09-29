@@ -1,4 +1,4 @@
-import { KeyboardNavItem } from '@/cerebro-ui'
+import { KeyboardNavItem } from 'cerebro-ui'
 
 const ActionButton = ({ action, onComplete, text }) => {
   const onSelect = () => {

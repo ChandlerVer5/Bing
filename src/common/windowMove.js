@@ -38,3 +38,37 @@ export default (win) => {
     }
   })
 }
+
+// add for mac OS~!
+export function makeDraggable(element) {
+  element = document.querySelector(element)
+  const win = require('electron').remote.getCurrentWindow()
+  const screen = require('electron').remote.screen
+  let winStartPosition = { x: 0, y: 0 }
+  let mouseStartPosition = { x: 0, y: 0 }
+
+  let dragging = false
+
+  element.addEventListener('mousedown', (e) => {
+    dragging = true
+    const winPosition = win.getPosition()
+    winStartPosition = { x: winPosition[0], y: winPosition[1] }
+    mouseStartPosition = screen.getCursorScreenPoint()
+  })
+  window.addEventListener('mouseup', () => {
+    dragging = false
+  })
+  window.addEventListener('mousemove', (e) => {
+    if (dragging) {
+      const { pageX, pageY } = e
+      const cursorPosition = screen.getCursorScreenPoint()
+      const x = winStartPosition.x + cursorPosition.x - mouseStartPosition.x
+      const y = winStartPosition.y + cursorPosition.y - mouseStartPosition.y
+      console.log(winStartPosition.x, cursorPosition.x, mouseStartPosition.x, x)
+      // win.setPosition(x, y, true)
+      window.moveTo(x, y)
+      // win.setPosition(pos[0], pos[1], true)
+      // window.moveTo(pos[0], pos[1])
+    }
+  })
+}

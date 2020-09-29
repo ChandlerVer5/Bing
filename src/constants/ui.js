@@ -5,10 +5,11 @@ export const INPUT_HEIGHT = 56
 export const RESULT_HEIGHT = 48
 
 // size of main window
-export const WINDOW_WIDTH = 724
+export const WINDOW_WIDTH = process.platform === 'win32' ? 724 : 700
+
+export const BORDER_WIDTH = process.platform === 'win32' ? 2 : process.platform === 'darwin' ? 0 : 1
 
 // eslint-disable-next-line unicorn/no-nested-ternary
-export const getBorderWidth = () => (global.platform.isWinOS ? 2 : global.platform.isMacOS ? 0 : 1)
 export const MAX_WINDOW_HEIGHT = RESULT_HEIGHT * 10 + INPUT_HEIGHT + 2 * 2 // 48 * 10 + 56 = 536, border width*2!
 
 // Maximum results that would be rendered

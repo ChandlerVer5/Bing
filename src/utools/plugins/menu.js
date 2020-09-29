@@ -1,7 +1,7 @@
 import path from 'path'
 import { Menu } from 'electron'
 import { getMainWindow } from '../api/helper'
-import { detachPlugin, exitPlugin } from './display'
+import { detachPlugin, exitPlugin } from './view'
 
 function initUpxMenu(upxId) {
   // const e = this.getDetachHotKey()
@@ -22,7 +22,7 @@ function initUpxMenu(upxId) {
         label: '开发者工具',
         icon: path.join(__dirname, 'res', 'menu', 'code@2x.png'),
         visible: false,
-        accelerator: global.platform.isMacOS ? 'Command+Alt+I' : 'Ctrl+Shift+I',
+        accelerator: global.IS_MAC ? 'Command+Alt+I' : 'Ctrl+Shift+I',
         click: () => {
           // this.windowCmp.openPluginDevTools()
         }
@@ -118,6 +118,7 @@ function initUpxMenu(upxId) {
       // icon: path.join(__dirname, 'res', 'menu', 'close@2x.png'),
       accelerator: 'Shift+Esc',
       click: () => {
+        console.log('exitPlugin', upxId)
         exitPlugin(upxId)
       }
     }

@@ -3,7 +3,7 @@ import loadPlugins from './loadPlugins'
 import getInstalledPlugins from './getInstalledPlugins'
 
 const DEFAULT_PLUGINS = [
-  MainRpc.isMacOS() ? 'cerebro-mac-apps' : 'cerebro-basic-apps',
+  MainRpc.IS_MAC ? 'cerebro-mac-apps' : 'cerebro-basic-apps',
   'cerebro-google',
   'cerebro-math',
   'cerebro-converter',

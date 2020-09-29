@@ -1,4 +1,4 @@
-import { Select, Text, Checkbox } from '@/cerebro-ui/Form'
+import { Select, Text, Checkbox } from 'cerebro-ui/Form'
 
 const components = {
   bool: Checkbox,

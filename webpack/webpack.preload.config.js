@@ -8,7 +8,7 @@ const prepload = (name) =>
   merge(baseConfig, {
     mode: env,
     entry: {
-      [name]: `${Conf.SRC}/preload/${name}.js`
+      [name]: name === 'preload' ? `${Conf.SRC}/${name}.js` : `${Conf.SRC}/utools/preload/${name}.js`
     },
     output: {
       // publicPath: path.resolve(__dirname, 'app'),

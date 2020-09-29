@@ -1,13 +1,18 @@
+// const nodeExternals = require('webpack-node-externals')
 const webpack = require('webpack')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 const Conf = require('./config')
+const babelJSON = require('../.babelrc')
+
+// all dependecies from app/package.json will be included in build/node_modules
+const externals = Object.assign(require('../src/package.json').dependencies, require('../src/package.json').optionalDependencies)
 
 module.exports = {
   mode: process.env.NODE_ENV,
   context: Conf.ROOT,
   resolve: {
-    modules: ['node_modules', Conf.MODULES],
+    modules: [Conf.SRC, Conf.MODULES],
     alias: {
       '@': Conf.SRC
     },
@@ -21,12 +26,16 @@ module.exports = {
       React: 'react',
       ReactDOM: 'react-dom'
     }),
-    new LodashModuleReplacementPlugin()
+    new LodashModuleReplacementPlugin(),
+    new webpack.ExternalsPlugin('commonjs2', ['pouchdb'])
   ],
   node: {
     __dirname: false,
     __filename: false
   },
+
+  // externals: [nodeExternals()],
+  // externals: Object.keys(externals || {}),
   module: {
     rules: [
       // {
@@ -37,16 +46,15 @@ module.exports = {
       // },
       {
         test: /\.(js|jsx)$/,
-        exclude: Conf.MODULES,
+        exclude: (modulePath) => modulePath.match(/node_modules/) && !modulePath.match(/node_modules(\/|\\)cerebro-ui/),
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env', '@babel/preset-react']
-          }
+          options: babelJSON
         }
       },
       {
-        test: /\.(webp|jpe?g|png|gif)$/,
+        test: /\.jpe?g$|\.gif$|\.png$|\.wav$|\.mp3$/,
+        exclude: Conf.MODULES,
         use: {
           loader: 'url-loader',
           options: {
@@ -54,8 +62,7 @@ module.exports = {
             name: 'img/[name]__[hash:base64:5].[ext]',
             publicPath: '../'
           }
-        },
-        exclude: Conf.MODULES
+        }
       },
       {
         test: /\.(ico|eot|svg|ttf|woff|woff2)$/,

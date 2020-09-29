@@ -1,19 +1,18 @@
 import fs from 'fs'
+import { join } from 'path'
 import { app } from 'electron'
 import { memoize } from 'cerebro-tools'
 import { trackEvent } from './trackEvent'
 import loadThemes from './loadThemes'
 
 // initiate portable mode
-
-// set data directory to ./userdata
 process.argv.forEach((arg) => {
   if (arg.toLowerCase() === '-p' || arg.toLowerCase() === '--portable') {
     app.setPath('userData', `${process.cwd()}/userdata`)
   }
 })
 
-const CONFIG_FILE = `${app.getPath('userData')}/config.json`
+const RootPath = app.getPath('userData')
 
 const defaultSettings = memoize(() => {
   const locale = app.getLocale() || 'en-US'
@@ -94,4 +93,24 @@ const set = (key, value) => {
   }
 }
 
-export default { get, set }
+// settings
+// set data directory to ./userdata
+const CONFIG_FILE = join(RootPath, 'settings')
+const DB_PATH = join(RootPath, 'database')
+
+// ========for plugins========
+const PLUGIN_PATH = join(RootPath, 'plugins')
+const PLUGIN_MODULES_PATH = join(PLUGIN_PATH, 'node_modules')
+const PLUGIN_LIST_FILE = join(PLUGIN_PATH, 'package.json')
+
+const EMPTY_PACKAGE_JSON = JSON.stringify(
+  {
+    name: 'cerebro-plugins',
+    cerebro: {},
+    utools: {}
+  },
+  null,
+  2
+)
+
+export { get, set, CONFIG_FILE, PLUGIN_PATH, DB_PATH, PLUGIN_MODULES_PATH, PLUGIN_LIST_FILE, EMPTY_PACKAGE_JSON }

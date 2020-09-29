@@ -3,7 +3,7 @@
 import { Component, createRef } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { focusableSelector } from '@/cerebro-ui'
+import { focusableSelector } from 'cerebro-ui'
 import escapeStringRegexp from 'escape-string-regexp'
 import debounce from 'lodash/debounce'
 import dragListener from 'drag-drop'
@@ -321,11 +321,10 @@ class Cerebro extends Component {
     term.onSelect(event) // from autocomplete
 
     if (term.upxId) {
-      this.setState({ isUpx: true })
+      this.setState({ isUpx: true }, () => this.cleanup())
       upxWindowApi({
         _restoreMain: this.clearBackToInitial
       })
-      this.cleanup()
     }
   }
 
@@ -417,8 +416,8 @@ class Cerebro extends Component {
         isUpx: false
       },
       () => {
-        this.focusMainInput()
         this.props.actions.updateItem('')
+        this.focusMainInput()
       }
     )
   }
@@ -430,7 +429,7 @@ class Cerebro extends Component {
       <div className={styles.search}>
         {isUpx && (
           <div ref={this.inputWrapperRef} className={styles.inputWrapper} style={dragEnterStyle}>
-            {isUpx && <IUtools term={this.props.term} feature={this.props.results[0]} selected={this.props.selected} restore={this.clearBackToInitial} />}
+            {isUpx && <IUtools term={this.props.term} feature={this.props.results[0]} selected={this.props.selected} />}
           </div>
         )}
         <div

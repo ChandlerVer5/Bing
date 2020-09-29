@@ -2,7 +2,7 @@ import plugins from 'plugins'
 import { on, send } from 'lib/rpc'
 import { getPlugSettings, modulesDirectory } from '@/plugins/config'
 
-require('fix-path')()
+// require('fix-path')()
 
 // global.React = React
 // global.ReactDOM = ReactDOM

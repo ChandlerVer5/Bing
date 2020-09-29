@@ -15,26 +15,28 @@ import { upxFilePath } from './base'
 
 // json's name is upx‘s id form db
 
-export default (upxName, upx) => {
-  const { code: name, explain: subtitle } = upx.features[0]
+export default (upxFileName, upx) => {
+  const { code, explain } = upx.features[0]
   const keyword = upx.features[0].cmds[0]
 
   const fn = ({ term, display }) => {
     const match = term.match(new RegExp(keyword))
+    console.log(term, upx.features, match)
     if (match) {
       // display({ icon: upx.logo, title: name, subtitle, onSelect })
     }
   }
 
   return {
-    upxFile: upxName,
-    upxId: upx.name,
-    pluginName: upx.pluginName,
-    keyword,
-    title: name,
-    subtitle,
     fn,
-    icon: upxFilePath(upxName, upx.logo),
-    name
+    keyword,
+    upxFile: upxFileName,
+    upxId: upx.name,
+    featureIndex: upx.featureIndex,
+    pluginName: upx.pluginName,
+    title: code,
+    subtitle: explain,
+    icon: upxFilePath(upxFileName, upx.logo),
+    name: code
   }
 }

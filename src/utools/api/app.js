@@ -1,10 +1,10 @@
-import { app, shell } from 'electron'
+import { app, screen, Notification, BrowserView, dialog } from 'electron'
 
 export default {
-  getPath: (e, t) => {
+  getPath: (e, name) => {
     try {
-      e.returnValue = n.app.getPath(t)
-    } catch (t) {
+      e.returnValue = app.getPath(name)
+    } catch (error) {
       e.returnValue = null
     }
   },
@@ -23,6 +23,14 @@ export default {
   redirect: (e, t) => {
     e.returnValue = this.redirect(t)
   },
+  showNotification: (e, { body, clickFeatureCode }) => {
+    console.log('showNotification', body, clickFeatureCod)
+    new Notification({
+      title: 'Cerebro',
+      body
+    }).show()
+  },
+
   copyFile: (e, t) => {
     t
       ? (Array.isArray(t) || (t = [t]),
@@ -34,13 +42,10 @@ export default {
     let i
     'string' == typeof t
       ? /^data:image\/([a-z]+);base64,/.test(t)
-        ? (i = n.nativeImage.createFromDataURL(t))
-        : p.a.basename(t) !== t && g.a.existsSync(t) && (i = n.nativeImage.createFromPath(t))
-      : 'object' == typeof t && t instanceof Uint8Array && (i = n.nativeImage.createFromBuffer(Buffer.from(t))),
-      i && !i.isEmpty() ? (n.clipboard.writeImage(i), (e.returnValue = !0)) : (e.returnValue = !1)
-  },
-  copyText: (e, t) => {
-    n.clipboard.writeText(String(t)), (e.returnValue = !0)
+        ? (i = nativeImage.createFromDataURL(t))
+        : p.a.basename(t) !== t && g.a.existsSync(t) && (i = nativeImage.createFromPath(t))
+      : 'object' == typeof t && t instanceof Uint8Array && (i = nativeImage.createFromBuffer(Buffer.from(t))),
+      i && !i.isEmpty() ? (clipboard.writeImage(i), (e.returnValue = !0)) : (e.returnValue = !1)
   },
   getCurrentFolderPath: (e) => {
     e.returnValue = this.getCurrentFolderPath()
@@ -49,6 +54,30 @@ export default {
     e.returnValue = this.getCurrentBrowserUrl()
   },
   showOpenDialog: (e, t) => {
+    let s
+    const o = BrowserView.fromWebContents(e)
+    if (((s = o ? BrowserWindow.fromBrowserView(o) : BrowserWindow.fromWebContents(e)), !s)) return
+    let r
+    try {
+      switch (t) {
+        case 'open':
+          r = dialog.showOpenDialogSync(s, i)
+          break
+        case 'save':
+          r = dialog.showSaveDialogSync(s, i)
+          break
+        case 'message':
+          r = dialog.showMessageBoxSync(s, i)
+      }
+    } catch (e) {}
+    return (
+      s === this.windowCmp.mainWindow &&
+        setTimeout(() => {
+          this.windowCmp.mainWindow.isVisible() ||
+            (this.windowCmp.mainWindow.getBrowserView() && (this.windowCmp.mainWindow.show(), e.isDestroyed() || e.focus()))
+        }, 500),
+      r
+    )
     e.returnValue = this.pluginAPIShowDialog(e.sender, 'open', t)
   },
   showSaveDialog: (e, t) => {
@@ -58,52 +87,34 @@ export default {
     e.returnValue = this.pluginAPIShowDialog(e.sender, 'message', t)
   },
   findInPage: (e, { text, options }) => {
+    console.log('findInPage', text)
     e.sender.findInPage(text, options)
     e.returnValue = true
   },
-  stopFindInPage: (e, t) => {
-    e.sender.stopFindInPage(t || 'clearSelection')
+  stopFindInPage: (e, action) => {
+    e.sender.stopFindInPage(action || 'clearSelection')
     e.returnValue = true
   },
-  startDrag: (e, t) => {
-    if (!t) return
+  startDrag: (e, file) => {
+    if (!file) return
     const i = {
-      icon: p.a.join(__dirname, 'res', 'dragfile.png')
+      icon: path.join(__dirname, 'res', 'dragfile.png')
     }
-    if ('string' == typeof t) i.file = t
+    if ('string' == typeof file) i.file = file
     else {
-      if (!Array.isArray(t)) return
-      i.files = t
+      if (!Array.isArray(file)) return
+      i.files = file
     }
     e.sender.startDrag(i)
   },
-  shellOpenExternal: (e, url) => {
-    shell.openExternal(url)
-    e.returnValue = true
-  },
-  shellShowItemInFolder: (e, item) => {
-    shell.showItemInFolder(item)
-    e.returnValue = true
-  },
-  shellOpenItem: (e, path) => {
-    shell.openPath(path)
-    e.returnValue = true
-  },
-  shellOpenPath: (e, path) => {
-    shell.openPath(path)
-    e.returnValue = true
-  },
-  shellBeep: (e) => {
-    shell.beep()
-    e.returnValue = true
-  },
+
   simulateKeyboardTap: (e, { key: t, modifier: i }) => {
     const n = [t.toLowerCase()]
     i &&
       Array.isArray(i) &&
       i.length > 0 &&
       i.forEach((e) => {
-        n.push(e.toLowerCase())
+        push(e.toLowerCase())
       }),
       oe.a.simulateKeyboardTap.apply(null, n),
       (e.returnValue = !0)
@@ -121,18 +132,22 @@ export default {
     t ? (oe.a.simulateMouseMove(t.x, t.y), (e.returnValue = !0)) : (e.returnValue = !1)
   },
   getCursorScreenPoint: (e) => {
-    e.returnValue = n.screen.getCursorScreenPoint()
+    e.returnValue = screen.getCursorScreenPoint()
   },
   getPrimaryDisplay: (e) => {
-    e.returnValue = n.screen.getPrimaryDisplay()
+    e.returnValue = screen.getPrimaryDisplay()
   },
+  // 获取所有显示器
   getAllDisplays: (e) => {
-    e.returnValue = n.screen.getAllDisplays()
+    e.returnValue = screen.getAllDisplays()
   },
-  getDisplayNearestPoint: (e, t) => {
-    e.returnValue = n.screen.getDisplayNearestPoint(t)
+  /**
+   * @param {object} point  eg.{x: 100, y: 100 }
+   */
+  getDisplayNearestPoint: (e, point) => {
+    e.returnValue = screen.getDisplayNearestPoint(point)
   },
-  getDisplayMatching: (e, t) => {
-    e.returnValue = n.screen.getDisplayMatching(t)
+  getDisplayMatching: (e, rect) => {
+    e.returnValue = screen.getDisplayMatching(rect)
   }
 }

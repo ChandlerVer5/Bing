@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import Bing from './components/Bing'
+import { makeDraggable } from '@/common/windowMove'
 
 import initAll from './init'
 
@@ -16,4 +17,8 @@ ReactDOM.render(
   document.getElementById('root')
 )
 
+// make main window Draggable
+// makeDraggable('#root')
+
+// init configs
 initAll(store)

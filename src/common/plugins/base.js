@@ -1,11 +1,11 @@
 import path from 'path'
 import fs from 'fs'
-import { app } from 'electron'
+import { PLUGIN_PATH, PLUGIN_MODULES_PATH, PLUGIN_LIST_FILE, EMPTY_PACKAGE_JSON } from '../app-configs'
 
 // import npm from './npm'
 // import upx from './upx'
 
-const isSymlink = (file) => fs.lstatSync(path.join(pluginDir, file)).isSymbolicLink()
+const isSymlink = (file) => fs.lstatSync(path.join(PLUGIN_PATH, file)).isSymbolicLink()
 
 const ensureFile = (src, content = '') => {
   if (!fs.existsSync(src)) {
@@ -19,35 +19,17 @@ const ensureDir = (src) => {
   }
 }
 
-const EMPTY_PACKAGE_JSON = JSON.stringify(
-  {
-    name: 'cerebro-plugins',
-    cerebro: {},
-    utools: {}
-  },
-  null,
-  2
-)
-
-// eslint-disable-next-line @typescript-eslint/camelcase
-// eslint-disable-next-line no-undef
-export const requireFunc = typeof __webpack_require__ === 'function' ? __non_webpack_require__ : require
-
-export const pluginDir = path.join(app.getPath('userData'), 'plugins')
-export const modulesDirectory = path.join(pluginDir, 'node_modules')
-export const packageJsonPath = path.join(pluginDir, 'package.json')
-
 export const ensureFiles = () => {
-  ensureDir(pluginDir)
-  ensureDir(modulesDirectory)
-  ensureFile(packageJsonPath, EMPTY_PACKAGE_JSON)
+  ensureDir(PLUGIN_PATH)
+  ensureDir(PLUGIN_MODULES_PATH)
+  ensureFile(PLUGIN_LIST_FILE, EMPTY_PACKAGE_JSON)
 }
 
 /**
  * @param {string} type get current plugins list
  */
 export const getInstallLists = (type) => {
-  const plugsJson = requireFunc(packageJsonPath)
+  const plugsJson = global.requireFunc(PLUGIN_LIST_FILE)
   delete plugsJson.name
   let result = null
   switch (type) {
@@ -71,7 +53,7 @@ export const getInstallLists = (type) => {
  */
 export const getPluginsInDev = () =>
   new Promise((resolve, reject) => {
-    fs.readdir(pluginDir, (err, files) => {
+    fs.readdir(PLUGIN_PATH, (err, files) => {
       if (err) {
         return reject(err)
       }
@@ -79,6 +61,6 @@ export const getPluginsInDev = () =>
     })
   })
 
-// export const client = npm(pluginDir)
-// export const client = upx(pluginDir)
+// export const client = npm(PLUGIN_PATH)
+// export const client = upx(PLUGIN_PATH)
 export const client = {}

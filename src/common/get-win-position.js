@@ -1,5 +1,5 @@
 import { screen } from 'electron'
-import config from './app-settings'
+import { get } from './app-configs'
 
 import { WINDOW_WIDTH, INPUT_HEIGHT, RESULT_HEIGHT, MIN_VISIBLE_RESULTS } from '../constants/ui'
 
@@ -23,7 +23,7 @@ export default ({ width, heightWithResults }) => {
   const winHeight = typeof heightWithResults !== 'undefined' ? heightWithResults : MIN_VISIBLE_RESULTS * RESULT_HEIGHT + INPUT_HEIGHT
 
   const display = screen.getPrimaryDisplay()
-  const positions = config.get('positions') || {}
+  const positions = get('positions') || {}
 
   if (display.id in positions) {
     const [x, y] = positions[display.id]
